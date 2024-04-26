@@ -1,0 +1,456 @@
+import { Issuer } from '@extrimian/vc-core/dist/models/issuer';
+import { CredentialManifestStyles, InputDescriptor, WACIMessage } from '@extrimian/waci';
+import { AgentModenaUniversalRegistry, AgentModenaUniversalResolver, } from '../../src';
+import { Agent } from '../../src/agent';
+import { DWNTransport } from '../../src/models/transports/dwn-transport';
+import { CredentialFlow } from '../../src/vc/models/credentia-flow';
+import { SelectiveDisclosure, VerifiableCredentialWithInfo, WACICredentialOfferSucceded, WACIProtocol } from '../../src/vc/protocols/waci-protocol';
+import { TestConfig } from '../config';
+import { FileSystemAgentSecureStorage } from '../mock/filesystem-secure-storage';
+import { FileSystemStorage } from '../mock/filesystme-storage';
+import { MemoryStorage } from '../mock/memory-storage';
+const vc = require('./mock/vc.json');
+
+jest.setTimeout(1000000);
+
+let issuerAgent: Agent;
+let holderAgent: Agent;
+let waciProtocol: WACIProtocol;
+
+let holderResolve: () => void;
+
+const holder = new Promise<void>(async (resolve, reject) => {
+    holderResolve = resolve;
+});
+
+
+beforeAll(async () => {
+    waciProtocol = new WACIProtocol({
+        storage: new MemoryStorage(),
+        issuer: {
+            issuerVerificationRules: async (waciInvitationId: string, holdedDid: string) => {
+                console.log("issuerVerificationRules", waciInvitationId);
+                return {
+                    verified: true,
+                    rejectMsg: null,
+                }
+            },
+            issueCredentials: async (waciInvitationId: string, holderId: string) => {
+                return new WACICredentialOfferSucceded({
+                    credentials: [
+                        {
+                            credential: {
+                                "@context": [
+                                    "https://www.w3.org/2018/credentials/v1",
+                                    "https://w3id.org/citizenship/v1",
+                                    "https://w3id.org/security/bbs/v1"
+                                ],
+                                "id": "https://issuer.oidp.uscis.gov/credentials/83627465",
+                                "type": ["VerifiableCredential", "PermanentResidentCard"],
+                                "issuer": "did:example:489398593",
+                                "name": "Permanent Resident Card",
+                                "description": "Government of Example Permanent Resident Card.",
+                                issuanceDate: "2021-11-17T12:19:52Z" as any,
+                                // "expirationDate": "2029-11-17T12:19:52Z",
+                                "credentialSubject": {
+                                    "id": "did:example:b34ca6cd37bbf23",
+                                    "type": ["PermanentResident", "Person"],
+                                    "givenName": "JOHN",
+                                    "familyName": "SMITH",
+                                    "gender": "Male",
+                                    "image": "data:image/png;base64,iVBORw0KGgokJggg==",
+                                    "residentSince": "2015-01-01",
+                                    "lprCategory": "C09",
+                                    "lprNumber": "999-999-999",
+                                    "commuterClassification": "C1",
+                                    "birthCountry": "Bahamas",
+                                    "birthDate": "1958-07-17"
+                                }
+                            },
+
+
+                            outputDescriptor: {
+                                id: 'citizencard',
+                                // schema: 'https://schema.org/EducationalOccupationalCredential',
+                                display: {
+                                    title: {
+                                        path: ['$.name', '$.vc.name'],
+                                        fallback: 'Resident Card',
+                                    },
+                                    subtitle: {
+                                        path: ['$.class', '$.vc.class'],
+                                        fallback: 'Resident Card',
+                                    },
+                                    description: {
+                                        text: 'Credencial de residencia',
+                                    },
+                                    properties: [
+                                        {
+                                            path: [
+                                                "$.credentialSubject.givenName",
+                                            ],
+                                            fallback: "Unknown",
+                                            label: "Primer Nombre"
+                                        },
+                                        {
+                                            path: [
+                                                "$.credentialSubject.familyName",
+                                            ],
+                                            fallback: "Unknown",
+                                            label: "Apellido"
+                                        },
+                                        {
+                                            path: [
+                                                "$.credentialSubject.image",
+                                            ],
+                                            fallback: "Unknown",
+                                            label: "Foto"
+                                        },
+                                        {
+                                            path: [
+                                                "$.credentialSubject.birthDate",
+                                            ],
+                                            fallback: "Unknown",
+                                            label: "Nacimiento"
+                                        }
+                                    ]
+                                },
+                                styles: {
+                                    background: {
+                                        color: '#ff0000',
+                                    },
+                                    thumbnail: {
+                                        uri: 'https://dol.wa.com/logo.png',
+                                        alt: 'Universidad Nacional',
+                                    },
+                                    hero: {
+                                        uri: 'https://dol.wa.com/alumnos.png',
+                                        alt: 'Alumnos de la universidad',
+                                    },
+                                    text: {
+                                        color: '#d4d400',
+                                    },
+                                },
+                            }
+                        }],
+                    inputDescriptors: [
+                        {
+                            id: 'Permanent Resident',
+                            name: 'PermanentResident',
+                            constraints: {
+                                fields: [
+                                    {
+                                        path: ['$.credentialSubject.givenName'],
+                                        filter: {
+                                            type: 'string',
+                                        },
+                                    },
+                                    {
+                                        path: ['$.credentialSubject.familyName'],
+                                        filter: {
+                                            type: 'string',
+                                        },
+                                    },
+                                ],
+                            },
+                        },
+                    ],
+                    frame: {
+                        "@context": [
+                            "https://www.w3.org/2018/credentials/v1",
+                            "https://w3id.org/citizenship/v1",
+                            "https://w3id.org/security/bbs/v1"
+                        ],
+                        "type": [
+                            "VerifiableCredential",
+                            "PermanentResidentCard"
+                        ],
+                        "credentialSubject": {
+                            "@explicit": true,
+                            "type": [
+                                "PermanentResident",
+                                "Person"
+                            ],
+                            "birthDate": {},
+                            "image": {}
+                        }
+                    },
+                    issuer: {
+                        name: 'Universidad Nacional',
+                        styles: {
+                            thumbnail: {
+                                uri: 'https://dol.wa.com/logo.png',
+                                alt: 'Universidad Nacional',
+                            },
+                            hero: {
+                                uri: 'https://dol.wa.com/alumnos.png',
+                                alt: 'Alumnos de la universidad',
+                            },
+                            background: {
+                                color: '#ff0000',
+                            },
+                            text: {
+                                color: '#d4d400',
+                            },
+                        },
+                    },
+                    options: {
+                        challenge: '508adef4-b8e0-4edf-a53d-a260371c1423',
+                        domain: '9rf25a28rs96',
+                    },
+                });
+            },
+        },
+        verifier: {
+            presentationDefinition: async (invitationId: string) => {
+                return {
+                    frame: {
+                        "@context": [
+                            "https://www.w3.org/2018/credentials/v1",
+                            "https://w3id.org/citizenship/v1",
+                            "https://w3id.org/security/bbs/v1"
+                        ],
+                        "type": [
+                            "VerifiableCredential",
+                            "PermanentResidentCard"
+                        ],
+                        "credentialSubject": {
+                            "@explicit": true,
+                            "type": [
+                                "PermanentResident",
+                                "Person"
+                            ],
+                            "birthDate": {},
+                            "image": {}
+                        }
+                    },
+                    inputDescriptors: [
+                        {
+                            id: 'Permanent Resident',
+                            name: 'PermanentResident',
+                            constraints: {
+                                fields: [
+                                    {
+                                        path: ['$.credentialSubject.givenName'],
+                                        filter: {
+                                            type: 'string',
+                                        },
+                                    },
+                                    {
+                                        path: ['$.credentialSubject.familyName'],
+                                        filter: {
+                                            type: 'string',
+                                        },
+                                    },
+                                ],
+                            },
+                        },
+                    ],
+                };
+            },
+        },
+    });
+    issuerAgent = new Agent({
+        didDocumentRegistry: new AgentModenaUniversalRegistry(
+            TestConfig.modenaUrl,
+            TestConfig.defaultDIDMethod
+        ),
+        didDocumentResolver: new AgentModenaUniversalResolver(TestConfig.modenaUrl),
+        agentStorage: new FileSystemStorage({
+            filepath: './__test__/data/agent-issuer-storage.json',
+        }),
+        secureStorage: new FileSystemAgentSecureStorage({
+            filepath: './__test__/data/agent-issuer-secure-storage.json',
+        }),
+        vcStorage: new MemoryStorage(),
+        vcProtocols: [waciProtocol],
+        supportedTransports: [new DWNTransport()],
+    });
+    await issuerAgent.initialize();
+
+    if (issuerAgent.identity.getOperationalDID() == null) {
+        const createDID = new Promise<void>(async (resolve, reject) => {
+            issuerAgent.identity.didCreated.on((did) => {
+                resolve();
+            })
+
+            issuerAgent.identity.createNewDID({
+                dwnUrl: TestConfig.dwnUrl
+            });
+        });
+
+        await createDID;
+    }
+
+    issuerAgent.vc.credentialIssued.on((args) => {
+        console.log(args);
+    });
+
+    const holderWaciProtocol = new WACIProtocol({
+        storage: new MemoryStorage(),
+        holder: {
+            credentialApplication: async (inputs: {
+                descriptor: InputDescriptor,
+                credentials: VerifiableCredentialWithInfo[],
+            }[],
+                selectiveDisclosure: SelectiveDisclosure,
+                message: WACIMessage,
+                issuer?: (Issuer | CredentialManifestStyles),
+                credentialsToReceive?: VerifiableCredentialWithInfo[]) => {
+
+                if (selectiveDisclosure.credentialSubjectFieldsToReveal.indexOf("Foto") == -1 ||
+                    selectiveDisclosure.credentialSubjectFieldsToReveal.indexOf("Nacimiento") == -1
+                ) {
+                    throw new Error("Se espera que credentialSubjectFieldsToReveal cargue los labels del output.")
+                }
+
+                return inputs.length == 0 || inputs[0].credentials.length == 0 ? null : [inputs[0].credentials[0].data];
+            }
+        },
+    });
+    holderAgent = new Agent({
+        didDocumentRegistry: new AgentModenaUniversalRegistry(
+            TestConfig.modenaUrl,
+            TestConfig.defaultDIDMethod
+        ),
+        didDocumentResolver: new AgentModenaUniversalResolver(TestConfig.modenaUrl),
+        agentStorage: new FileSystemStorage({
+            filepath: './__test__/data/agent-holder-storage.json',
+        }),
+        secureStorage: new FileSystemAgentSecureStorage({
+            filepath: './__test__/data/agent-holder-secure-storage.json',
+        }),
+        vcStorage: new FileSystemStorage({
+            filepath: './__test__/data/agent-holder-vc-storage.json',
+        }),
+        vcProtocols: [holderWaciProtocol],
+        supportedTransports: [new DWNTransport()],
+    });
+
+    await holderAgent.initialize();
+
+    if (holderAgent.identity.getOperationalDID() == null) {
+        const createDID = new Promise<void>(async (resolve, reject) => {
+            holderAgent.identity.didCreated.on((did) => {
+                resolve();
+            })
+
+            holderAgent.identity.createNewDID({
+                dwnUrl: TestConfig.dwnUrl
+            });
+        });
+
+        await createDID;
+    }
+
+    const wait = async () =>
+        new Promise<void>((resolve, reject) => {
+            setTimeout(() => {
+                resolve();
+            }, 20000);
+        });
+
+    await wait();
+});
+
+afterAll(() => {
+    issuerAgent.transport.transports.forEach(x => x.dispose());
+    holderAgent.transport.transports.forEach(x => x.dispose());
+});
+
+describe('Verifiable Credentials', () => {
+    it('Credential Issuance', async () => {
+        const processMessage = async () =>
+            new Promise(async (resolve, reject) => {
+                holderAgent.vc.credentialArrived.on(async (vc) => {
+                    await Promise.all(vc.credentials.map(async v => {
+
+                        await holderAgent.vc.saveCredentialWithInfo(v.data, {
+                            display: v.display,
+                            styles: v.styles
+                        });
+
+                        expect(v?.data.id).toEqual('https://issuer.oidp.uscis.gov/credentials/83627465');
+
+                        const result = await holderAgent.vc.verifyVC({
+                            vc: v.data,
+                        });
+                        expect(vc.messageId).not.toBeNull();
+                        expect(result.result).toBe(true);
+                    }));
+                });
+
+                issuerAgent.vc.ackCompleted.on((args) => {
+                    console.log(args);
+
+                    expect(args.messageId).not.toBeNull();
+
+                    resolve(null);
+                });
+
+                issuerAgent.vc.presentationVerified.on((args) => {
+                    expect(args.messageId).not.toBeNull();
+                    
+                    const credential = args.vcs[0];
+
+                    //Acá se verifica que haya aplicado el selective disclosure
+                    expect(credential.credentialSubject.birthDate).toEqual("1958-07-17");
+                    expect(credential.credentialSubject.image).toEqual("data:image/png;base64,iVBORw0KGgokJggg==");
+                    expect(credential.credentialSubject.familyName).toBeUndefined();
+                });
+
+                await holderAgent.vc.processMessage({
+                    message: await issuerAgent.vc.createInvitationMessage({
+                        flow: CredentialFlow.Issuance,
+                    }),
+                });
+            });
+
+        await processMessage();
+    });
+    it('Credential Presentation: Holder wait and process message again', async () => {
+        await holderAgent.vc.processMessage({
+            message: await issuerAgent.vc.createInvitationMessage({
+                flow: CredentialFlow.Presentation,
+            })
+        });
+
+        await holderResolve;
+
+        issuerAgent.vc.credentialPresented.on((args) => {
+            console.log(args);
+        });
+
+        const waitCredentialArrived = async () =>
+            new Promise<void>(async (resolve, reject) => {
+                holderAgent.vc.credentialArrived.on(async (vc) => {
+                    await Promise.all(vc.credentials.map(async v => {
+                        await holderAgent.vc.saveCredentialWithInfo(v.data, {
+                            display: v.display,
+                            styles: v.styles
+                        });
+
+                        expect(v?.data.id).toEqual('http://example.edu/credentials/58473');
+
+                        const result = await holderAgent.vc.verifyVC({
+                            vc: v.data,
+                        });
+
+                        expect(result.result).toBe(true);
+                    }))
+                });
+
+                holderAgent.vc.ackCompleted.on((args) => {
+                    expect(args.messageId).not.toBeNull()
+                    resolve();
+                });
+
+                holderAgent.vc.problemReport.on((data) => {
+                    expect(data.messageId).not.toBeNull();
+                    reject("Problem Report");
+                });
+            });
+
+        await waitCredentialArrived();
+    });
+});

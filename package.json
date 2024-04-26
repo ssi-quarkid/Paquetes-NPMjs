@@ -1,0 +1,33 @@
+{
+	"private": true,
+	"name": "extrimian",
+	"version": "1.0.0",
+	"workspaces": [
+		"packages/did/core",
+		"packages/did/resolver",
+		"packages/core/**",
+		"packages/vc/core",
+		"packages/kms/core",
+		"packages/vc/**",
+		"packages/dwn/client",
+		"packages/dwn/scheduler",
+		"packages/kms/suite/vc/jsonld",
+		"packages/kms/suite/**",
+		"packages/kms/client",
+		"packages/kms/storage/**",
+		"packages/kms/storage/vault",
+		"packages/modena/sdk",
+		"packages/did/registry",
+		"packages/waci/core",
+		"packages/agent/core",
+		"packages/one-click",
+		"packages/agent/plugins/one-click",
+		"packages/ami/ami-core",
+		"packages/ami/ami-sdk",
+		"packages/agent/plugins/ami"
+	],
+	"scripts": {
+		"build": "yarn workspaces run build",
+		"clean": "find . \\( -name 'node_modules' -o -name 'dist' -o -name 'lib' \\) -type d -prune -exec rm -rf '{}' +"
+	}
+}

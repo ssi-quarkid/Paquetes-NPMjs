@@ -1,0 +1,11 @@
+# Ignora todos los archivos .md
+*.md
+
+# Ignora todos los archivos en el directorio 'tests'
+_tests_/
+
+# Ignora el archivo .travis.yml
+.travis.yml
+
+# Ignora el archivo package-lock.json
+package-lock.json

@@ -1,0 +1,319 @@
+import { VerifiableCredential } from '@extrimian/vc-core';
+import { CredentialManifestStyles } from '@extrimian/waci';
+import axios from 'axios';
+import jwtDecode from 'jwt-decode';
+import { IStorage } from '../../models/agent-storage';
+import { DID } from '../../models/did';
+import { getSearchParam } from '../../utils';
+import { CredentialFlow } from '../models/credentia-flow';
+import { VCProtocol } from './vc-protocol';
+import { CredentialDisplay, IssuerData } from './waci-protocol';
+
+export class OpenIDProtocol extends VCProtocol<any> {
+  private storage: IStorage;
+
+  constructor(params?: {
+    issuer?: {};
+    hoder?: {};
+    verifier?: {};
+    storage: IStorage;
+  }) {
+    super();
+    this.storage = params.storage;
+  }
+
+  generateGUID() {
+    function generateSegment() {
+      return Math.floor((1 + Math.random()) * 0x10000)
+        .toString(16)
+        .substring(1);
+    }
+
+    return (
+      generateSegment() +
+      generateSegment() +
+      '-' +
+      generateSegment() +
+      '-4' +
+      generateSegment().substr(0, 3) +
+      '-' +
+      generateSegment() +
+      '-' +
+      generateSegment() +
+      generateSegment() +
+      generateSegment()
+    );
+  }
+
+  async processMessage(message: any, context?: any, _did?: DID): Promise<any> {
+    const request_uri = getSearchParam('request_uri', message);
+    const encodedData = (await axios.get(request_uri)).data;
+    const decodedData: MicrosoftCredential = jwtDecode(encodedData);
+    const credentialData: MicrosoftCredentialInfo = jwtDecode(
+      decodedData.id_token_hint
+    );
+    const manifestEncoded = (
+      await axios.get(
+        decodedData.claims.vp_token.presentation_definition.input_descriptors[0]
+          .issuance[0].manifest
+      )
+    ).data?.token;
+    const credentialManifest: MicrosoftCredentialManifest =
+      jwtDecode(manifestEncoded);
+    const { did, sub, aud, exp, iat, iss, jti, nonce, sub_jwk, pin, ...rest } =
+      credentialData;
+    const data: VerifiableCredential = {
+      credentialSubject: {
+        ...rest,
+      },
+      id: this.generateGUID(),
+      type: [
+        decodedData.claims.vp_token.presentation_definition.input_descriptors[0]
+          .id,
+      ],
+      issuer: {
+        id: credentialData.iss,
+        name: credentialManifest.display.card.issuedBy,
+      },
+      issuanceDate: new Date(),
+    };
+
+    const claims = [
+      {
+        path: '$.credentialSubject.given_name',
+        label: 'First Name',
+      },
+      {
+        path: '$.credentialSubject.family_name',
+        label: 'Last Name',
+      },
+    ];
+
+    const display: CredentialDisplay = {
+      description: {
+        text: credentialManifest.display.card.description,
+      },
+      title: {
+        text: credentialManifest.display.card.title,
+      },
+      properties: claims.map((claim) => {
+        const value = {
+          label: claim.label,
+          path: [claim.path],
+          schema: {
+            type: 'string',
+          },
+          fallback: 'Unknown',
+        };
+        return value;
+      }),
+    };
+
+    const styles: CredentialManifestStyles = {
+      thumbnail: {
+        alt: credentialManifest.display.card.logo.description,
+        uri: credentialManifest.display.card.logo.uri,
+      },
+      background: { color: credentialManifest.display.card.backgroundColor },
+      text: {
+        color: credentialManifest.display.card.textColor,
+      },
+      hero: {
+        uri: '',
+        alt: '',
+      },
+    };
+
+    const issuer: IssuerData = {
+      id: credentialData.iss,
+      name: credentialManifest.display.card.issuedBy,
+    };
+
+    this.onVcArrived.trigger({
+      credentials: [{ data, styles, display }],
+      messageId: "",
+      issuer,
+    });
+  }
+
+  async isProtocolMessage(message: any): Promise<boolean> {
+    if (
+      typeof message === 'string' &&
+      message.includes('openid-vc://') &&
+      getSearchParam('request_uri', message)
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  async createInvitationMessage(flow: CredentialFlow, did: DID): Promise<any> {
+    throw new Error('Method not implemented.');
+  }
+}
+
+export interface MicrosoftCredential {
+  jti: string;
+  iat: number;
+  response_type: string;
+  response_mode: string;
+  scope: string;
+  nonce: string;
+  client_id: string;
+  redirect_uri: string;
+  prompt: string;
+  state: string;
+  exp: number;
+  registration: Registration;
+  claims: Claims;
+  pin: Pin;
+  id_token_hint: string;
+}
+export interface Claims {
+  vp_token: VpToken;
+}
+
+export interface VpToken {
+  presentation_definition: PresentationDefinition;
+}
+export interface PresentationDefinition {
+  id: string;
+  input_descriptors: InputDescriptor[];
+}
+
+export interface InputDescriptor {
+  id: string;
+  schema: Schema[];
+  issuance: Issuance[];
+}
+
+export interface Issuance {
+  manifest: string;
+}
+
+export interface Schema {
+  uri: string;
+}
+
+export interface Pin {
+  length: number;
+  type: string;
+  alg: string;
+  iterations: number;
+  salt: string;
+  hash: string;
+}
+
+export interface Registration {
+  client_name: string;
+  subject_syntax_types_supported: string[];
+  vp_formats: VpFormats;
+}
+
+export interface VpFormats {
+  jwt_vp: JwtV;
+  jwt_vc: JwtV;
+}
+
+export interface JwtV {
+  alg: string[];
+}
+
+export interface MicrosoftCredentialInfo {
+  sub: string;
+  aud: string;
+  nonce: string;
+  sub_jwk: SubJwk;
+  did: string;
+  given_name: string;
+  family_name: string;
+  iss: string;
+  iat: number;
+  jti: string;
+  exp: number;
+  pin: Pin;
+}
+
+export interface Pin {
+  length: number;
+  type: string;
+  alg: string;
+  iterations: number;
+  salt: string;
+  hash: string;
+}
+
+export interface SubJwk {
+  crv: string;
+  kid: string;
+  kty: string;
+  x: string;
+  y: string;
+}
+
+export interface MicrosoftCredentialManifest {
+  id: string;
+  display: Display;
+  input: Input;
+  iss: string;
+  iat: number;
+}
+
+export interface Display {
+  locale: string;
+  contract: string;
+  card: Card;
+  consent: Consent;
+  claims: Claims;
+  id: string;
+}
+
+export interface Card {
+  title: string;
+  issuedBy: string;
+  backgroundColor: string;
+  textColor: string;
+  logo: Logo;
+  description: string;
+}
+
+export interface Logo {
+  uri: string;
+  description: string;
+}
+
+export interface Claims {
+  type: string;
+  label: string;
+}
+
+export interface VcCredentialSubject {
+  type: string;
+  label: string;
+}
+
+export interface Consent {
+  title: string;
+  instructions: string;
+}
+
+export interface Input {
+  credentialIssuer: string;
+  issuer: string;
+  attestations: Attestations;
+  id: string;
+}
+
+export interface Attestations {
+  accessTokens: AccessToken[];
+}
+
+export interface AccessToken {
+  id: string;
+  encrypted: boolean;
+  claims: any[];
+  required: boolean;
+  configuration: string;
+  resourceId: string;
+  oboScope: string;
+}
