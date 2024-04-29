@@ -17,4 +17,5 @@ Este conjunto de 11 paquetes NPMJs se utiliza para realizar las operación de ba
 9. [kms](https://www.npmjs.com/package/@quarkid/kms-suite-bbsbls2020)
 10. [vault](https://www.npmjs.com/package/@quarkid/kms-storage-vault)
 11. [waci](https://www.npmjs.com/package/@quarkid/waci)
-
+12. [dwn-client](https://www.npmjs.com/package/@quarkid/dwn-client)
+13. [dwn-client-scheduler](https://www.npmjs.com/package/@quarkid/dwn-client-scheduler)
