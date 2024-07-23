@@ -1,6 +1,6 @@
-import { CredentialDisplay, IssuerData, VerifiableCredentialWithInfo } from "@extrimian/agent/src/vc/protocols/waci-protocol";
+import { CredentialDisplay, IssuerData, VerifiableCredentialWithInfo } from "@quarkid/agent/src/vc/protocols/waci-protocol";
 import { AssertionMethodPurpose, AuthenticationPurpose, Purpose, VerificationMethodJwk } from "@extrimian/did-core";
-import { Base, BaseConverter, IJWK, IKMS, Suite, getTypeBySuite } from "@extrimian/kms-core";
+import { Base, BaseConverter, IJWK, IKMS, Suite, getTypeBySuite } from "@quarkid/kms-core";
 import { VerifiableCredential } from "@extrimian/vc-core";
 import { VCSuiteError, VCVerifierService } from "@extrimian/vc-verifier";
 import { CredentialManifestStyles, PresentationDefinitionFrame } from "@extrimian/waci";
@@ -19,6 +19,8 @@ import { LiteEvent } from "../utils/lite-event";
 import { CredentialFlow } from "./models/credentia-flow";
 import { VCCreateKeyRequest } from "./models/vc-create-key-request";
 import { ActorRole, VCProtocol } from "./protocols/vc-protocol";
+import { IAgentPlugin } from "../plugins/iplugin";
+import { IStatusListAgentPlugin } from "../plugins/istatus-list-plugin";
 
 export class VC {
     private transports: AgentTransport;
@@ -45,7 +47,12 @@ export class VC {
     public get ackCompleted() { return this.onAckCompleted.expose(); }
 
     protected readonly onProblemReport = new LiteEvent<{ did: DID, code: string, invitationId: string, messageId: string }>;
-    public get problemReport() { return this.onProblemReport.expose(); }
+    public get problemReport() { return this.onProblemReport.expose(); };
+
+    protected readonly onBeforeSigningVC = new LiteEvent<{ vc: VerifiableCredential, issuerDID: DID }>;
+    public get beforeSigningVC() { return this.onBeforeSigningVC.expose(); };
+
+    protected credentialStatusPlugins = new Array<IStatusListAgentPlugin>();
 
     constructor(opts: {
         transports: AgentTransport,
@@ -93,6 +100,10 @@ export class VC {
         })
 
         this.vcStorage = opts.vcStorage;
+    }
+
+    addCredentialStatusStrategy(credentialStatusStrategy: IStatusListAgentPlugin) {
+        this.credentialStatusPlugins.push(credentialStatusStrategy);
     }
 
     async saveCredential(vc: VerifiableCredential) {
@@ -199,6 +210,15 @@ export class VC {
         // Si el DID Document no contiene la clave, el agente no debería firmar ya que hay un error.
         if (!firstValidPbk) {
             throw Error("There aren't public keys valid to use based on Issuer DID Document and KMS secrets");
+        }
+
+        this.onBeforeSigningVC.trigger({ vc: opts.credential, issuerDID: opts.did });
+
+        for (let csPlugin of this.credentialStatusPlugins) {
+            if (await csPlugin.canHandle({ vc: opts.credential, issuerDID: opts.did })) {
+                await csPlugin.handle({ vc: opts.credential, issuerDID: opts.did });
+                break;
+            }
         }
 
         // Si contiene la clave, se procede a la firma

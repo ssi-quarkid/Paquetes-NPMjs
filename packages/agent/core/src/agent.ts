@@ -1,5 +1,5 @@
-import { KMSClient } from "@extrimian/kms-client";
-import { IKMS, LANG } from "@extrimian/kms-core";
+import { KMSClient } from "@quarkid/kms-client";
+import { IKMS, LANG } from "@quarkid/kms-core";
 import { VCProtocolNotFoundError } from "./exceptions/vc-protocol-not-found";
 import { Messaging } from "./messaging/messaging";
 import { AgentIdentity } from "./models/agent-identity";
@@ -15,6 +15,8 @@ import { PluginDispatcher } from "./plugins/plugin-dispatcher";
 import { AgentTransport } from "./transport/transport";
 import { VCProtocol } from "./vc/protocols/vc-protocol";
 import { VC } from "./vc/vc";
+import { LiteEvent } from "./utils/lite-event";
+import { IStatusListAgentPlugin } from "./plugins/istatus-list-plugin";
 
 export class Agent {
     private _messaging: Messaging;
@@ -62,8 +64,12 @@ export class Agent {
         return this.agentTransport;
     }
 
+    private credentialStatusPlugins: IStatusListAgentPlugin[];
     private plugins: IAgentPlugin[];
     private readonly pluginDispatcher: PluginDispatcher;
+
+    private readonly onAgentInitialized = new LiteEvent<void>();
+    public get agentInitialized() { return this.onAgentInitialized.expose(); }
 
     constructor(params: {
         didDocumentResolver: IAgentResolver,
@@ -74,6 +80,7 @@ export class Agent {
         vcStorage: IStorage,
         vcProtocols: VCProtocol[],
         agentPlugins?: IAgentPlugin[],
+        credentialStatusPlugins?: IStatusListAgentPlugin[],
         mnemonicLang?: LANG
     }) {
         this.agentSecureStorage = params.secureStorage;
@@ -107,11 +114,11 @@ export class Agent {
 
         this.resolver = params.didDocumentResolver as IAgentResolver;
         this.registry = params.didDocumentRegistry as IAgentRegistry;
-        this.registry.initialize({ kms: this.kms });
+        this.registry.initialize({ kms: this.kms as any });
 
         this.agentKMS = new AgentKMS({
             identity: this.identity,
-            kms: this.kms,
+            kms: this.kms as any,
             resolver: this.resolver
         });
 
@@ -127,6 +134,7 @@ export class Agent {
         });
 
         this.plugins = params.agentPlugins;
+        this.credentialStatusPlugins = params.credentialStatusPlugins;
     }
 
     async initialize(params?: {
@@ -140,6 +148,10 @@ export class Agent {
 
         if (this.plugins) {
             await Promise.all(this.plugins.map(async x => await x.initialize({ agent: this })));
+        }
+
+        if (this.credentialStatusPlugins && this.credentialStatusPlugins.length > 0) {
+            this.initializeStatusListPlugins();
         }
 
         if (!this._vc) {
@@ -156,7 +168,7 @@ export class Agent {
         }
 
         this._messaging = new Messaging({
-            kms: this.kms,
+            kms: this.kms as any,
             identity: this.identity,
             resolver: this.resolver,
             registry: this.registry,
@@ -170,6 +182,31 @@ export class Agent {
                 contextMessage: data.contextMessage
             });
         });
+
+        this.onAgentInitialized.trigger();
+    }
+
+    async initializeStatusListPlugins() {
+        const ensureDIDCreated = async () => {
+            if (this.identity.getDIDs().length > 0) return;
+
+            return new Promise<void>((resolve, reject) => {
+
+                const didCreatedEvent = () => {
+                    resolve();
+                    this.identity.didCreated.off(didCreatedEvent);
+                }
+
+                this.identity.didCreated.on(didCreatedEvent)
+            });
+        }
+
+        await ensureDIDCreated();
+
+        for (let cs of this.credentialStatusPlugins) {
+            this.vc.addCredentialStatusStrategy(cs);
+            cs.initialize({ agent: this });
+        }
     }
 
     async processMessage(params: {

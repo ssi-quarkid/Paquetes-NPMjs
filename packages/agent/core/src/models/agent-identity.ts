@@ -3,7 +3,7 @@ import {
   AuthenticationPurpose,
   KeyAgreementPurpose,
 } from '@extrimian/did-core';
-import { Base, BaseConverter, IJWK, IKeyPair, IKMS, Suite } from '@extrimian/kms-core';
+import { Base, BaseConverter, IJWK, IKeyPair, IKMS, Suite } from '@quarkid/kms-core';
 import {
   IdentityDataShareBehavior,
   IdentityExportResult,
