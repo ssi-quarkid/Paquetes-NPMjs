@@ -17,6 +17,8 @@ import { VCProtocol } from "./vc/protocols/vc-protocol";
 import { VC } from "./vc/vc";
 import { LiteEvent } from "./utils/lite-event";
 import { IStatusListAgentPlugin } from "./plugins/istatus-list-plugin";
+import { AgentPluginBase } from "./plugins/ivc-interceptor-plugin";
+import { VerifiableCredential } from "@extrimian/vc-core";
 
 export class Agent {
     private _messaging: Messaging;
@@ -41,6 +43,7 @@ export class Agent {
                 resolver: this.resolver,
                 transports: this.agentTransport,
                 vcProtocols: this.vcProtocols,
+                verificationRules: this.verificationRules,
             })
         }
         return this._vc;
@@ -65,11 +68,13 @@ export class Agent {
     }
 
     private credentialStatusPlugins: IStatusListAgentPlugin[];
-    private plugins: IAgentPlugin[];
+    private plugins: (IAgentPlugin | AgentPluginBase)[];
     private readonly pluginDispatcher: PluginDispatcher;
 
     private readonly onAgentInitialized = new LiteEvent<void>();
     public get agentInitialized() { return this.onAgentInitialized.expose(); }
+
+    public verificationRules: ((vc: VerifiableCredential) => Promise<{ result: boolean, rejectDetail?: { name: string, description: string, code: number } }>)[] = [];
 
     constructor(params: {
         didDocumentResolver: IAgentResolver,
@@ -79,7 +84,7 @@ export class Agent {
         agentStorage: IStorage,
         vcStorage: IStorage,
         vcProtocols: VCProtocol[],
-        agentPlugins?: IAgentPlugin[],
+        agentPlugins?: (IAgentPlugin | AgentPluginBase)[],
         credentialStatusPlugins?: IStatusListAgentPlugin[],
         mnemonicLang?: LANG
     }) {
@@ -87,7 +92,7 @@ export class Agent {
         this.vcStorage = params.vcStorage;
         this.agentSecureStorage = params.secureStorage;
         this.agentStorage = params.agentStorage;
-        this.pluginDispatcher = new PluginDispatcher(params.agentPlugins);
+        this.pluginDispatcher = new PluginDispatcher(params.agentPlugins.filter(x => (<IAgentPlugin>x).canHandle) as IAgentPlugin[]);
         this.vcProtocols = params.vcProtocols;
 
         this.kms = new KMSClient({
@@ -137,6 +142,10 @@ export class Agent {
         this.credentialStatusPlugins = params.credentialStatusPlugins;
     }
 
+    async addVerificationRules(v: (vc: VerifiableCredential) => Promise<{ result: boolean, rejectDetail?: { name: string, description: string, code: number } }>) {
+        this.verificationRules.push(v);
+    }
+
     async initialize(params?: {
         operationalDID?: DID,
     }) {
@@ -164,6 +173,7 @@ export class Agent {
                 resolver: this.resolver,
                 transports: this.agentTransport,
                 vcProtocols: this.vcProtocols,
+                verificationRules: this.verificationRules,
             });
         }
 
