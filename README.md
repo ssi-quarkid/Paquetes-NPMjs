@@ -1,11 +1,14 @@
-## Paquetes NPMjs
-Este conjunto de 11 paquetes NPMJs se utiliza para realizar las operación de bajo nivel y abstraer la lógica para facilitar el desarrollo de los componentes.
+## NPM Packages
 
-## Tecnologías utilizadas
+This set of 13 NPM packages is used to perform low-level operations and abstract the logic to facilitate the development of components.
+
+## Technologies used
+
 1. NodeJs
-2. Typescript 
+2. Typescript
 
-## Paquetes utilizados
+## Packages used
+
 1. [did-registry](https://www.npmjs.com/package/@quarkid/did-registry)
 2. [kms client](https://www.npmjs.com/package/@quarkid/kms-client)
 3. [did resolver](https://www.npmjs.com/package/@quarkid/did-resolver)

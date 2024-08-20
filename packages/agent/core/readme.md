@@ -1,118 +1,119 @@
 # Extrimian Agent
 
-El agente de extrimian resuelve problemas básicos de identidad autosoberana.
+The Extrimian agent solves basic self-sovereign identity problems.
 
-Permite crear DIDs, configurar servicios como el DWN, configurar protocolos para la transferencia de credenciales (WACI) y automatizar flujos. A través de eventos, permite identificar el momento en que se recibe una credencial y el momento en que se presenta (informando además el resultado de la presentación).
+It allows creating DIDs, configuring services such as DWN, setting up protocols for credential transfer (WACI), and automating flows. Through events, it enables identifying when a credential is received and when it is presented (also reporting the result of the presentation).
 
-## Ejemplos de uso del componente
+## Examples of component usage
 
-### 1. Instanciar el Agente
-En primer lugar se debe configurar los protocolos de intercambio de credenciales (por ejemplo WACI). Esta configuración permite definir que credenciales emitirá este agente y que credenciales presentará al momento en que se lo soliciten.
+### 1. Instantiate the Agent
+First, you must configure the credential exchange protocols (for example, WACI). This configuration allows you to define which credentials this agent will issue and which credentials it will present when requested.
 
-```
-//El agente necesita preconfigurar protocolos de intercambio de credenciales. En este instante se debe configurar también las credenciales que emitirá este agente.
-//Si el agente no va a recibir a emitir credenciales, no espera verificarlas ni recibirlas, no es necesario configurar el WACIProtocol. En ese caso se envía un objeto vacía en el constructor. Este escenario no suele ser útil, sin embargo, puede servir para probar el agente rápidamente.
+```javascript
+// The agent needs to preconfigure credential exchange protocols. At this point, you should also configure the credentials that this agent will issue.
+// If the agent is not going to receive or issue credentials, does not expect to verify them or receive them, it is not necessary to configure the WACIProtocol. In that case, an empty object is sent in the constructor. This scenario is not usually useful, however, it can serve to quickly test the agent.
 const waciProtocol = new WACIProtocol({});
 ```
 
-Si se está instanciando un agente que genera credenciales, es necesario configurar el waciProtocol. Un ejemplo de configuración podría ser el siguiente
-```
+If you are instantiating an agent that generates credentials, it is necessary to configure the waciProtocol. An example configuration could be as follows:
+
+```javascript
 waciProtocol = new WACIProtocol({
-        issuer: {
-            issueCredentials: async (waciInvitationId: string, holderId: string) => {
-                return new WACICredentialOfferSucceded({
-                    credentials: [{
-                        credential: {
-                            "@context": [
-                                "https://www.w3.org/2018/credentials/v1",
-                                "https://www.w3.org/2018/credentials/examples/v1",
-                                "https://w3id.org/security/bbs/v1"
-                            ],
-                            id: "http://example.edu/credentials/58473",
-                            type: [
-                                "VerifiableCredential",
-                                "AlumniCredential"
-                            ],
-                            issuer: issuerDID,
-                            issuanceDate: new Date(),
-                            credentialSubject: {
-                                id: holderId,
-                                givenName: "Jhon",
-                                familyName: "Does"
-                            }
-                        },
-                        outputDescriptor: {
-                            id: "alumni_credential_output",
-                            schema: "https://schema.org/EducationalOccupationalCredential",
-                            display: {
-                                title: {
-                                    path: [
-                                        "$.name",
-                                        "$.vc.name"
-                                    ],
-                                    fallback: "Alumni Credential"
-                                },
-                                subtitle: {
-                                    path: [
-                                        "$.class",
-                                        "$.vc.class"
-                                    ],
-                                    fallback: "Alumni"
-                                },
-                                description: {
-                                    "text": "Credencial que permite validar que es alumno del establecimiento"
-                                },
-                            },
-                            styles: {                                
-                                background: {
-                                    color: "#ff0000"
-                                },
-                                thumbnail: {
-                                    uri: "https://dol.wa.com/logo.png",
-                                    alt: "Universidad Nacional"
-                                },
-                                hero: {
-                                    uri: "https://dol.wa.com/alumnos.png",
-                                    alt: "Alumnos de la universidad"
-                                },
-                                text: {
-                                    color: "#d4d400"
-                                }
-                            }
+    issuer: {
+        issueCredentials: async (waciInvitationId: string, holderId: string) => {
+            return new WACICredentialOfferSucceded({
+                credentials: [{
+                    credential: {
+                        "@context": [
+                            "https://www.w3.org/2018/credentials/v1",
+                            "https://www.w3.org/2018/credentials/examples/v1",
+                            "https://w3id.org/security/bbs/v1"
+                        ],
+                        id: "http://example.edu/credentials/58473",
+                        type: [
+                            "VerifiableCredential",
+                            "AlumniCredential"
+                        ],
+                        issuer: issuerDID,
+                        issuanceDate: new Date(),
+                        credentialSubject: {
+                            id: holderId,
+                            givenName: "John",
+                            familyName: "Doe"
                         }
-                    }],
-                    issuer: {
-                        name: "Universidad Nacional",
-                        styles: {
+                    },
+                    outputDescriptor: {
+                        id: "alumni_credential_output",
+                        schema: "https://schema.org/EducationalOccupationalCredential",
+                        display: {
+                            title: {
+                                path: [
+                                    "$.name",
+                                    "$.vc.name"
+                                ],
+                                fallback: "Alumni Credential"
+                            },
+                            subtitle: {
+                                path: [
+                                    "$.class",
+                                    "$.vc.class"
+                                ],
+                                fallback: "Alumni"
+                            },
+                            description: {
+                                "text": "Credential that allows validating that they are a student of the institution"
+                            },
+                        },
+                        styles: {                                
+                            background: {
+                                color: "#ff0000"
+                            },
                             thumbnail: {
                                 uri: "https://dol.wa.com/logo.png",
-                                alt: "Universidad Nacional"
+                                alt: "National University"
                             },
                             hero: {
                                 uri: "https://dol.wa.com/alumnos.png",
-                                alt: "Alumnos de la universidad"
-                            },
-                            background: {
-                                color: "#ff0000"
+                                alt: "University students"
                             },
                             text: {
                                 color: "#d4d400"
                             }
                         }
-                    },
-                    options: {
-                        challenge: "508adef4-b8e0-4edf-a53d-a260371c1423",
-                        domain: "9rf25a28rs96"
-                    },
-                });
-            }
-        },
-    });
+                    }
+                }],
+                issuer: {
+                    name: "National University",
+                    styles: {
+                        thumbnail: {
+                            uri: "https://dol.wa.com/logo.png",
+                            alt: "National University"
+                        },
+                        hero: {
+                            uri: "https://dol.wa.com/alumnos.png",
+                            alt: "University students"
+                        },
+                        background: {
+                            color: "#ff0000"
+                        },
+                        text: {
+                            color: "#d4d400"
+                        }
+                    }
+                },
+                options: {
+                    challenge: "508adef4-b8e0-4edf-a53d-a260371c1423",
+                    domain: "9rf25a28rs96"
+                },
+            });
+        }
+    },
+});
 ```
 
-Si deseas verificar credenciales, deberás configurar el waciProtocol para ese fin y restringir las credenciales que pueden presentarte como verifier.
+If you want to verify credentials, you'll need to configure the waciProtocol for that purpose and restrict the credentials that can be presented to you as a verifier.
 
-```
+```javascript
 verifier: {
     presentationDefinition: async (invitationId: string) => {
         return {
@@ -166,9 +167,9 @@ verifier: {
 }
 ```
 
-Para configurar el comportamiento del holder, opcionalmente puedes configurar el waciProtocol. Como holder, debes seleccionar cual de las credenciales que te están solicitando en el flujo vas a querer presentar. Por defecto, si no configuras este comportamiento, el agente enviará la primera que aplica (ya que puede aplicar más de una a las restricciones aplicadas por el verifier).
+To configure the holder's behavior, you can optionally configure the waciProtocol. As a holder, you must select which of the credentials being requested in the flow you want to present. By default, if you don't configure this behavior, the agent will send the first one that applies (since more than one may apply to the restrictions applied by the verifier).
 
-```
+```javascript
 const holderWaciProtocol = new WACIProtocol({
     holder: {
         selectVcToPresent: async (vcs: VerifiableCredential[]) => {
@@ -178,9 +179,9 @@ const holderWaciProtocol = new WACIProtocol({
 });
 ```
 
-El agente requiere que se definan comportamientos de storages. Quien implemente el agente debe decidir de que manera se van a guardar los datos. Para eso debe implementar la interfaz IAgentStorage y IAgentSecureStorage. A continuacion se deja un ejemplo que implementa los storages en filesystem. Este codigo es a modo de ejemplo y sirve para pruebas de desarrollo. En produccion es recomendable realizar una implementacion del AgentSecureStorage que guarde datos en una Vault. Estos storages deben pasarse a continuacion en el constructor del agent obligatoriamente.
+The agent requires that storage behaviors be defined. Whoever implements the agent must decide how the data will be stored. For this, they must implement the IAgentStorage and IAgentSecureStorage interfaces. Below is an example that implements the storages in the filesystem. This code is for example purposes and serves for development testing. In production, it is recommended to implement AgentSecureStorage that stores data in a Vault. These storages must then be passed in the agent constructor mandatorily.
 
-```
+```javascript
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { IAgentStorage } from '@extrimian/agent';
 
@@ -243,7 +244,7 @@ export class FileSystemStorage implements IAgentStorage {
 }
 ```
 
-```
+```javascript
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { AgentSecureStorage } from '@extrimian/agent';
 
@@ -307,9 +308,10 @@ export class FileSystemAgentSecureStorage implements AgentSecureStorage {
 }
 ```
 
-Una vez configurado el WACIProtocol que define el comportamiento del agente respecto a las credenciales, debes instanciar el Agente en si mismo:
-```
-//Crear una nueva instancia del agente, se deben pasar los protocolos a usar para la generación de VC (por ejemplo el WACIProtocol que definimos anteriormente)
+Once the WACIProtocol that defines the agent's behavior regarding credentials is configured, you must instantiate the Agent itself:
+
+```javascript
+// Create a new instance of the agent, you must pass the protocols to be used for VC generation (for example, the WACIProtocol we defined earlier)
 agent = new Agent({
     didDocumentRegistry: new AgentModenaUniversalRegistry("http://modena.gcba-extrimian.com:8080"),
     didDocumentResolver: new AgentModenaUniversalResolver("http://modena.gcba-extrimian.com:8080"),
@@ -317,73 +319,76 @@ agent = new Agent({
 });
 ```
 
-Respecto al registry y al resolver, debes definir nodos de modena o proxies que te permitan llegar a un Universal Modena Resolver o a un Universal Modena Registry.
+Regarding the registry and resolver, you must define Modena nodes or proxies that allow you to reach a Universal Modena Resolver or a Universal Modena Registry.
 
-```
-//Siempre, en primer lugar, se debe inicializar el agente para comenzar a operar. Esto configura clases internas que son requeridas para funcionar.
+```javascript
+// Always, first, you must initialize the agent to begin operating. This configures internal classes that are required to function.
 await agent.initialize();
 ```
 
+To create a new DID, you can invoke the following function:
 
-Para crear un nuevo DID, puedes invocar la siguiente función:
-```
+```javascript
 const did = await agent.identity.createNewDID({
     dwnUrl: dwnUrl
 });
 ```
-En este momento podrás definir algunos servicios y configuraciones claves, como la url de tu DWN.
 
-El proceso de creación de un DID es asyncrónico, es por eso que el agente te avisará cuando el DID haya sido creado a través del siguiente evento:
-```
+At this point, you can define some key services and configurations, such as your DWN URL.
+
+The process of creating a DID is asynchronous, which is why the agent will notify you when the DID has been created through the following event:
+
+```javascript
 agent.identity.didCreated.on(async args => {
     console.log(args.did);
 });
 ```
 
-Una vez que el DID haya sido creado, podrás operar con el agente.
+Once the DID has been created, you can operate with the agent.
 
-### 2. (ISSUER) Crear invitación para la generación de credenciales
-Como Issuer, puedes generar un mensaje que funcionará como invitación para iniciar el flujo de generación de credenciales para un holder.
+### 2. (ISSUER) Create invitation for credential generation
+As an Issuer, you can generate a message that will function as an invitation to initiate the credential generation flow for a holder.
 
-Para eso puedes invocar el siguiente código: 
+For this, you can invoke the following code:
 
-````
+```javascript
 const invitationMessage = await issuerAgent.vc.createInvitationMessage({ flow: CredentialFlow.Issuance })
-````
-
-Este mensaje puede ser convertido en un código QR y procesado posteriormente por el Agent del holder que iniciará el flujo de WACI para el intercambio de credenciales.
-
-Para procesar este primer mensaje de invitación con el agente de extrimian, el holder puede llamar al método processMessage, que iniciará el flujo que se continuará de forma automática.
-
-### 3. (HOLDER) Procesar mensaje de invitación para la generación de credenciales.
-
 ```
+
+This message can be converted into a QR code and subsequently processed by the holder's Agent that will initiate the WACI flow for credential exchange.
+
+To process this first invitation message with the Extrimian agent, the holder can call the processMessage method, which will initiate the flow that will continue automatically.
+
+### 3. (HOLDER) Process invitation message for credential generation
+
+```javascript
 holderAgent.vc.processMessage({
     message: invitationMessage
 });
 ```
 
-Por otro lado, el holder debe configurar el evento para saber cuando se le generó una credencial.
+On the other hand, the holder must configure the event to know when a credential was generated.
 
-```
+```javascript
 holderAgent.vc.credentialArrived.on((vc) => {
     holderAgent.vc.saveCredential(vc);
 });
 ```
 
-La generación de una credencial no implica necesariamente que el holder deba guardarla, es por eso que dentro de ese evento, el holder puede invocar al método saveCredential para persistir la VC entre sus credenciales.
+The generation of a credential does not necessarily imply that the holder must save it, which is why within that event, the holder can invoke the saveCredential method to persist the VC among their credentials.
 
-### 4. (VERIFIER) Crear invitación para la verificación de credenciales
-Así como el Issuer genera el mensaje de invitación para la emisión, el verifier debe crear el flujo para la presentación de credenciales…
+### 4. (VERIFIER) Create invitation for credential verification
+Just as the Issuer generates the invitation message for issuance, the verifier must create the flow for credential presentation...
 
-```
+```javascript
 const presentationMessage = verifierAgent.vc.createInvitationMessage({ flow: CredentialFlow.Presentation }),
 ```
 
-De la misma manera que podría hacer el issuer, el mensaje de invitación de presentación puede ser convertido a un código QR para que el holder pueda escanearlo y comenzar el flujo de presentación enviando a procesar el mensaje.
+In the same way that the issuer could do, the presentation invitation message can be converted to a QR code so that the holder can scan it and begin the presentation flow by sending the message to be processed.
 
-El verifier sabrá cuando finalizó el flujo de presentación a través de un evento que le devolverá la credencial presentada y el resultado de flujo (válido o inválido), tanto para las validaciones de presentación como de la credencial en si misma.:
-```
+The verifier will know when the presentation flow has finished through an event that will return the presented credential and the flow result (valid or invalid), both for the presentation validations and for the credential itself:
+
+```javascript
 issuerAgent.vc.credentialPresented.on((args) => {
     expect(args.vcVerified).toBe(true);
     expect(args.presentationVerified).toBe(true); 
