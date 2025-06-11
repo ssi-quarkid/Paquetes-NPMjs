@@ -7,10 +7,9 @@ import {
   TransactionSignature,
   LockingScript,
   UnlockingScript,
-  TransactionInput // Added for explicit type if needed elsewhere, though addInput handles it.
+  TransactionInput, // Added for explicit type if needed elsewhere, though addInput handles it.
+  SatoshisPerKilobyte
 } from '@bsv/sdk';
-import SatoshisPerKilobyte from '@bsv/sdk/transaction/fee-models/SatoshisPerKilobyte';
-import FeeModel from '@bsv/sdk/transaction/FeeModel';
 import fetch, { RequestInfo, Response, RequestInit } from 'node-fetch';
 
 // Constants for BRC-48 DID Operations
@@ -67,7 +66,7 @@ export interface BsvOverlayDidRegistryConfig {
   changeAddressProvider: ChangeAddressProviderFunction;
   overlayNodeEndpoint: string;
   topic: string; // The specific topic for this DID method instance
-  feeModel?: FeeModel; // Optional: defaults to 0.05 sats/byte if not provided
+  feeModel?: SatoshisPerKilobyte; // Optional: defaults to 0.05 sats/byte if not provided
   fetchImplementation?: (url: RequestInfo, init?: RequestInit) => Promise<Response>; // For testing/custom fetch
 }
 
@@ -169,7 +168,7 @@ export class BsvOverlayDidRegistryService {
     const payloadReferenceHash = Hash.sha256(didDocumentString);
 
     try {
-      new PublicKey(request.controllerPublicKeyHex); // Validate public key format
+      PublicKey.fromString(request.controllerPublicKeyHex); // Validate public key format
     } catch (e: any) {
       throw new Error(`Invalid controllerPublicKeyHex: ${e.message}`);
     }
@@ -199,7 +198,7 @@ export class BsvOverlayDidRegistryService {
 
     const SATS_PER_BYTE = feePerKb / 1000;
     const P2PKH_OUTPUT_SIZE = 34;
-    const BRC48_OUTPUT_SCRIPT_SIZE = (brc48Script as any).toBuffer().length;
+    const BRC48_OUTPUT_SCRIPT_SIZE = brc48Script.toBinary().length;
     const BRC48_OUTPUT_SIZE = BRC48_OUTPUT_SCRIPT_SIZE + 9; // script + value + output index
     const P2PKH_FUNDING_INPUT_SIZE = 148; // Approximate size for a P2PKH input
 
@@ -369,7 +368,7 @@ export class BsvOverlayDidRegistryService {
     const newPayloadReferenceHash = Hash.sha256(newDidDocumentString);
 
     try {
-      new PublicKey(request.newControllerPublicKeyHex); // Validate new public key format
+      PublicKey.fromString(request.newControllerPublicKeyHex); // Validate new public key format
     } catch (e: any) {
       throw new Error(`Invalid newControllerPublicKeyHex: ${e.message}`);
     }
@@ -417,7 +416,7 @@ export class BsvOverlayDidRegistryService {
     const SATS_PER_BYTE = feePerKb / 1000;
     const BRC48_INPUT_SIZE_APPROX = 110; 
     const P2PKH_OUTPUT_SIZE = 34;
-    const BRC48_OUTPUT_SCRIPT_SIZE = (brc48UpdateScript as any).toBuffer().length;
+    const BRC48_OUTPUT_SCRIPT_SIZE = brc48UpdateScript.toBinary().length;
     const BRC48_OUTPUT_SIZE = BRC48_OUTPUT_SCRIPT_SIZE + 9;
     const P2PKH_FUNDING_INPUT_SIZE = 148;
 

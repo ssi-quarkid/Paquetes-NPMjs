@@ -1,4 +1,4 @@
-import { IssuerData, VerifiableCredentialWithInfo } from "@extrimian/agent/src/vc/protocols/waci-protocol";
+import { IssuerData, VerifiableCredentialWithInfo } from "@quarkid/agent/src/vc/protocols/waci-protocol";
 import { VerifiableCredential } from "@extrimian/vc-core";
 import { Agent } from "../../agent";
 import { DID } from "../../models/did";

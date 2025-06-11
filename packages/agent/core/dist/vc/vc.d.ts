@@ -1,6 +1,6 @@
-import { CredentialDisplay, IssuerData, VerifiableCredentialWithInfo } from "@extrimian/agent/src/vc/protocols/waci-protocol";
+import { CredentialDisplay, IssuerData, VerifiableCredentialWithInfo } from "@quarkid/agent/src/vc/protocols/waci-protocol";
 import { Purpose } from "@extrimian/did-core";
-import { IJWK, IKMS } from "@extrimian/kms-core";
+import { IJWK, IKMS } from "@quarkid/kms-core";
 import { VerifiableCredential } from "@extrimian/vc-core";
 import { VCSuiteError } from "@extrimian/vc-verifier";
 import { CredentialManifestStyles, PresentationDefinitionFrame } from "@extrimian/waci";
@@ -16,6 +16,7 @@ import { LiteEvent } from "../utils/lite-event";
 import { CredentialFlow } from "./models/credentia-flow";
 import { VCCreateKeyRequest } from "./models/vc-create-key-request";
 import { ActorRole, VCProtocol } from "./protocols/vc-protocol";
+import { IStatusListAgentPlugin } from "../plugins/istatus-list-plugin";
 export declare class VC {
     private transports;
     private kms;
@@ -24,6 +25,7 @@ export declare class VC {
     private agentStorage;
     private vcStorage;
     private vcProtocols;
+    private verificationRules;
     private readonly onCredentialArrived;
     get credentialArrived(): import("../utils/lite-event").ILiteEvent<{
         credentials: VerifiableCredentialWithInfo[];
@@ -80,6 +82,43 @@ export declare class VC {
         invitationId: string;
         messageId: string;
     }>;
+    protected readonly onBeforeSigningVC: LiteEvent<{
+        vc: VerifiableCredential;
+        issuerDID: DID;
+    }>;
+    get beforeSigningVC(): import("../utils/lite-event").ILiteEvent<{
+        vc: VerifiableCredential<any>;
+        issuerDID: DID;
+    }>;
+    protected readonly onBeforeSaveVC: LiteEvent<{
+        vc: VerifiableCredential;
+    }>;
+    get beforeSaveVC(): import("../utils/lite-event").ILiteEvent<{
+        vc: VerifiableCredential<any>;
+    }>;
+    protected readonly onAfterSaveVC: LiteEvent<{
+        vc: VerifiableCredential;
+    }>;
+    get afterSaveVC(): import("../utils/lite-event").ILiteEvent<{
+        vc: VerifiableCredential<any>;
+    }>;
+    protected readonly onBeforeVerifyVC: LiteEvent<{
+        vc: VerifiableCredential;
+    }>;
+    get beforeVerifyVC(): import("../utils/lite-event").ILiteEvent<{
+        vc: VerifiableCredential<any>;
+    }>;
+    protected readonly onAfterVerifyVC: LiteEvent<{
+        vc: VerifiableCredential;
+        verifierDID: DID;
+        result: boolean;
+    }>;
+    get afterVerifyVC(): import("../utils/lite-event").ILiteEvent<{
+        vc: VerifiableCredential<any>;
+        verifierDID: DID;
+        result: boolean;
+    }>;
+    protected credentialStatusPlugins: IStatusListAgentPlugin[];
     constructor(opts: {
         transports: AgentTransport;
         vcProtocols: VCProtocol[];
@@ -89,7 +128,16 @@ export declare class VC {
         agentStorage: IStorage;
         vcStorage: IStorage;
         messaging: Messaging;
+        verificationRules: ((vc: VerifiableCredential) => Promise<{
+            result: boolean;
+            rejectDetail?: {
+                name: string;
+                description: string;
+                code: number;
+            };
+        }>)[];
     });
+    addCredentialStatusStrategy(credentialStatusStrategy: IStatusListAgentPlugin): void;
     saveCredential(vc: VerifiableCredential): Promise<void>;
     saveCredentialWithInfo(vc: VerifiableCredential, params?: {
         styles: CredentialManifestStyles;
@@ -163,5 +211,5 @@ export declare class VC {
     deriveVC(params: {
         vc: VerifiableCredential;
         deriveProofFrame: PresentationDefinitionFrame;
-    }): Promise<VerifiableCredential<any>>;
+    }): Promise<import("@extrimian/vc-core").VerifiableCredential<any>>;
 }

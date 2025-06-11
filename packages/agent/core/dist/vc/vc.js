@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.VC = void 0;
 const did_core_1 = require("@extrimian/did-core");
-const kms_core_1 = require("@extrimian/kms-core");
+const kms_core_1 = require("@quarkid/kms-core");
 const vc_verifier_1 = require("@extrimian/vc-verifier");
 const base_64_1 = require("base-64");
 const vc_protocol_not_found_1 = require("../exceptions/vc-protocol-not-found");
@@ -26,13 +26,31 @@ class VC {
     get credentialIssued() { return this.onCredentialIssued.expose(); }
     get ackCompleted() { return this.onAckCompleted.expose(); }
     get problemReport() { return this.onProblemReport.expose(); }
+    ;
+    get beforeSigningVC() { return this.onBeforeSigningVC.expose(); }
+    ;
+    get beforeSaveVC() { return this.onBeforeSaveVC.expose(); }
+    ;
+    get afterSaveVC() { return this.onAfterSaveVC.expose(); }
+    ;
+    get beforeVerifyVC() { return this.onBeforeVerifyVC.expose(); }
+    ;
+    get afterVerifyVC() { return this.onAfterVerifyVC.expose(); }
+    ;
     constructor(opts) {
+        this.verificationRules = [];
         this.onCredentialArrived = new lite_event_1.LiteEvent();
         this.onCredentialPresented = new lite_event_1.LiteEvent();
         this.onPresentationVerified = new lite_event_1.LiteEvent;
         this.onCredentialIssued = new lite_event_1.LiteEvent();
         this.onAckCompleted = new lite_event_1.LiteEvent;
         this.onProblemReport = new lite_event_1.LiteEvent;
+        this.onBeforeSigningVC = new lite_event_1.LiteEvent;
+        this.onBeforeSaveVC = new lite_event_1.LiteEvent;
+        this.onAfterSaveVC = new lite_event_1.LiteEvent;
+        this.onBeforeVerifyVC = new lite_event_1.LiteEvent;
+        this.onAfterVerifyVC = new lite_event_1.LiteEvent;
+        this.credentialStatusPlugins = new Array();
         this.transports = opts.transports;
         this.kms = opts.kms;
         this.resolver = opts.resolver;
@@ -63,15 +81,23 @@ class VC {
             protocol.problemReport.on(data => this.onProblemReport.trigger(data));
         });
         this.vcStorage = opts.vcStorage;
+        this.verificationRules = opts.verificationRules;
+    }
+    addCredentialStatusStrategy(credentialStatusStrategy) {
+        this.credentialStatusPlugins.push(credentialStatusStrategy);
     }
     saveCredential(vc) {
         return __awaiter(this, void 0, void 0, function* () {
+            this.onBeforeSaveVC.trigger({ vc: vc });
             yield this.vcStorage.add(vc.id, vc);
+            this.onAfterSaveVC.trigger({ vc: vc });
         });
     }
     saveCredentialWithInfo(vc, params) {
         return __awaiter(this, void 0, void 0, function* () {
+            yield this.onBeforeSaveVC.trigger({ vc: vc });
             yield this.vcStorage.add(vc.id, { data: vc, styles: params.styles, display: params.display });
+            yield this.onAfterSaveVC.trigger({ vc: vc });
         });
     }
     removeCredential(id) {
@@ -151,6 +177,13 @@ class VC {
             if (!firstValidPbk) {
                 throw Error("There aren't public keys valid to use based on Issuer DID Document and KMS secrets");
             }
+            yield this.onBeforeSigningVC.trigger({ vc: opts.credential, issuerDID: opts.did });
+            for (let csPlugin of this.credentialStatusPlugins) {
+                if (yield csPlugin.canHandle({ vc: opts.credential, issuerDID: opts.did })) {
+                    yield csPlugin.handle({ vc: opts.credential, issuerDID: opts.did });
+                    break;
+                }
+            }
             // Si contiene la clave, se procede a la firma
             const vc = yield this.kms.signVC(kms_core_1.Suite.Bbsbls2020, firstValidPbk.publicKeyJwk, opts.credential, (opts.did || this.identity.getOperationalDID()).value, (opts.did || this.identity.getOperationalDID()).value + firstValidPbk.id, opts.purpose || new did_core_1.AssertionMethodPurpose());
             return vc;
@@ -185,11 +218,27 @@ class VC {
         });
     }
     verifyVC(params) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const vcService = new vc_verifier_1.VCVerifierService({
                 didDocumentResolver: (did) => this.resolver.resolve(did_1.DID.from(did)),
             });
             const result = yield vcService.verify(params.vc, params.purpose || new did_core_1.AssertionMethodPurpose());
+            if (result.result) {
+                for (let f of this.verificationRules) {
+                    const r = yield f(params.vc);
+                    if (!r.result) {
+                        return {
+                            result: false,
+                            error: {
+                                code: (_a = r.rejectDetail) === null || _a === void 0 ? void 0 : _a.code,
+                                description: r.rejectDetail.description,
+                                name: r.rejectDetail.name
+                            }
+                        };
+                    }
+                }
+            }
             return result;
         });
     }

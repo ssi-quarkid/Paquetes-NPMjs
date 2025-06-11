@@ -16,6 +16,7 @@ export { WebsocketTransport } from "./models/transports/websocket-transport";
 export { IVCStorage } from "./models/vc-storage";
 export { IAgentPlugin, IAgentPluginMessage, IAgentPluginResponse } from "./plugins/iplugin";
 export { CredentialFlow } from "./vc/models/credentia-flow";
+export { IStatusListAgentPlugin, IStatusListPluginMessage } from "./plugins/istatus-list-plugin";
 export { OpenIDProtocol } from "./vc/protocols/openid-protocol";
 export { CredentialRequestedEventArg, VCMessageType, VCProtocol, VCProtocolResponse } from "./vc/protocols/vc-protocol";
 export { WACICredentialOfferRejected, WACICredentialOfferResult, WACICredentialOfferSucceded, WACICredentialOfferWaitForResponse, WACIProtocol } from "./vc/protocols/waci-protocol";

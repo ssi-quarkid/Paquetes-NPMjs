@@ -1,4 +1,4 @@
-import { IJWK, IKeyPair, IKMS } from '@extrimian/kms-core';
+import { IJWK, IKeyPair, IKMS } from '@quarkid/kms-core';
 import { IdentityDataShareBehavior, IdentityExportResult } from '../data-share-behaviours/identity-data-share-behavior';
 import { IAgentRegistry, KeyDefinition, ServiceDefinition, VMKey } from './agent-registry';
 import { IAgentResolver } from './agent-resolver';

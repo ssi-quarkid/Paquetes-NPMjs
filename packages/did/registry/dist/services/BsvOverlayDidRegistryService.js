@@ -49,7 +49,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BsvOverlayDidRegistryService = void 0;
 var sdk_1 = require("@bsv/sdk");
-var SatoshisPerKilobyte_1 = require("@bsv/sdk/transaction/fee-models/SatoshisPerKilobyte");
 var node_fetch_1 = require("node-fetch");
 // Constants for BRC-48 DID Operations
 var QKDID_PROTOCOL_MARKER = 'QKDID';
@@ -58,7 +57,7 @@ var OP_UPDATE = 'UPDATE';
 var QKDID_REVOKE_MARKER = 'QKDID_REVOKE'; // For future use
 var BsvOverlayDidRegistryService = /** @class */ (function () {
     function BsvOverlayDidRegistryService(config) {
-        this.config = __assign(__assign({}, config), { feeModel: config.feeModel || new SatoshisPerKilobyte_1.default(50) });
+        this.config = __assign(__assign({}, config), { feeModel: config.feeModel || new sdk_1.SatoshisPerKilobyte(50) });
         this.fetchImplementation = config.fetchImplementation || node_fetch_1.default;
     }
     BsvOverlayDidRegistryService.prototype.createDID = function (request) {
@@ -67,7 +66,7 @@ var BsvOverlayDidRegistryService = /** @class */ (function () {
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        feePerKb = request.feePerKb || (this.config.feeModel instanceof SatoshisPerKilobyte_1.default ? this.config.feeModel.value : 50);
+                        feePerKb = request.feePerKb || (this.config.feeModel instanceof sdk_1.SatoshisPerKilobyte ? this.config.feeModel.value : 50);
                         return [4 /*yield*/, this.buildAndBroadcastBrc48CreateTx(request, feePerKb)];
                     case 1:
                         _a = _b.sent(), tx = _a.tx, vout = _a.vout;
@@ -98,7 +97,7 @@ var BsvOverlayDidRegistryService = /** @class */ (function () {
                         didDocumentString = JSON.stringify(request.didDocument);
                         payloadReferenceHash = sdk_1.Hash.sha256(didDocumentString);
                         try {
-                            new sdk_1.PublicKey(request.controllerPublicKeyHex); // Validate public key format
+                            sdk_1.PublicKey.fromString(request.controllerPublicKeyHex); // Validate public key format
                         }
                         catch (e) {
                             throw new Error("Invalid controllerPublicKeyHex: ".concat(e.message));
@@ -118,7 +117,7 @@ var BsvOverlayDidRegistryService = /** @class */ (function () {
                         brc48OutputIndex = tx.outputs.length - 1;
                         SATS_PER_BYTE = feePerKb / 1000;
                         P2PKH_OUTPUT_SIZE = 34;
-                        BRC48_OUTPUT_SCRIPT_SIZE = brc48Script.toBuffer().length;
+                        BRC48_OUTPUT_SCRIPT_SIZE = brc48Script.toBinary().length;
                         BRC48_OUTPUT_SIZE = BRC48_OUTPUT_SCRIPT_SIZE + 9;
                         P2PKH_FUNDING_INPUT_SIZE = 148;
                         estimatedTxSize = 10 + BRC48_OUTPUT_SIZE + P2PKH_OUTPUT_SIZE;
@@ -264,7 +263,7 @@ var BsvOverlayDidRegistryService = /** @class */ (function () {
                         // TODO: Parse didToUpdate to extract topic, current txid, vout if needed for validation
                         // For now, we assume the caller provides all necessary parts of the current BRC-48 UTXO correctly.
                         console.log("Initiating update for DID: ".concat(request.didToUpdate));
-                        feePerKb = request.feePerKb || (this.config.feeModel instanceof SatoshisPerKilobyte_1.default ? this.config.feeModel.value : 50);
+                        feePerKb = request.feePerKb || (this.config.feeModel instanceof sdk_1.SatoshisPerKilobyte ? this.config.feeModel.value : 50);
                         return [4 /*yield*/, this.buildAndBroadcastBrc48UpdateTx(request, feePerKb)];
                     case 1:
                         _a = _b.sent(), tx = _a.tx, vout = _a.vout;
@@ -298,7 +297,7 @@ var BsvOverlayDidRegistryService = /** @class */ (function () {
                         newDidDocumentString = JSON.stringify(request.newDidDocument);
                         newPayloadReferenceHash = sdk_1.Hash.sha256(newDidDocumentString);
                         try {
-                            new sdk_1.PublicKey(request.newControllerPublicKeyHex); // Validate new public key format
+                            sdk_1.PublicKey.fromString(request.newControllerPublicKeyHex); // Validate new public key format
                         }
                         catch (e) {
                             throw new Error("Invalid newControllerPublicKeyHex: ".concat(e.message));
@@ -331,7 +330,7 @@ var BsvOverlayDidRegistryService = /** @class */ (function () {
                         SATS_PER_BYTE = feePerKb / 1000;
                         BRC48_INPUT_SIZE_APPROX = 110;
                         P2PKH_OUTPUT_SIZE = 34;
-                        BRC48_OUTPUT_SCRIPT_SIZE = brc48UpdateScript.toBuffer().length;
+                        BRC48_OUTPUT_SCRIPT_SIZE = brc48UpdateScript.toBinary().length;
                         BRC48_OUTPUT_SIZE = BRC48_OUTPUT_SCRIPT_SIZE + 9;
                         P2PKH_FUNDING_INPUT_SIZE = 148;
                         estimatedTxSize = 10 + BRC48_INPUT_SIZE_APPROX + BRC48_OUTPUT_SIZE + P2PKH_OUTPUT_SIZE;

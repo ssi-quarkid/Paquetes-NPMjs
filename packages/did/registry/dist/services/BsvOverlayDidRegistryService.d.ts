@@ -1,5 +1,5 @@
-import { Transaction } from '@bsv/sdk';
-import FeeModel from '@bsv/sdk/transaction/FeeModel';
+import { Transaction, // Added for explicit type if needed elsewhere, though addInput handles it.
+SatoshisPerKilobyte } from '@bsv/sdk';
 import { RequestInfo, Response, RequestInit } from 'node-fetch';
 export interface UTXO {
     txid: string;
@@ -39,7 +39,7 @@ export interface BsvOverlayDidRegistryConfig {
     changeAddressProvider: ChangeAddressProviderFunction;
     overlayNodeEndpoint: string;
     topic: string;
-    feeModel?: FeeModel;
+    feeModel?: SatoshisPerKilobyte;
     fetchImplementation?: (url: RequestInfo, init?: RequestInit) => Promise<Response>;
 }
 export interface CreateDidRequest {
