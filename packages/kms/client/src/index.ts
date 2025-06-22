@@ -1,2 +1,2 @@
-export { BaseConverter, Base } from "@extrimian/kms-core";
+export { BaseConverter, Base } from "@quarkid/kms-core";
 export { KMSClient } from "./services/kms-client";

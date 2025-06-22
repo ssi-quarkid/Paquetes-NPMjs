@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.inMemoryMessageStorage = exports.DWNTransport = void 0;
-const did_core_1 = require("@extrimian/did-core");
+const did_core_1 = require("@quarkid/did-core");
 const dwn_client_1 = require("@extrimian/dwn-client");
 const lite_event_1 = require("../../utils/lite-event");
 const did_1 = require("../did");

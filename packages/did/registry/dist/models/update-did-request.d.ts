@@ -1,5 +1,5 @@
-import { Service } from "@extrimian/did-core";
-import { IJWK } from "@extrimian/kms-core";
+import { Service } from "@quarkid/did-core";
+import { IJWK } from "@quarkid/kms-core";
 import { DIDDocumentMetadata } from "@extrimian/modena-sdk";
 import { VerificationMethod } from "./interfaces";
 export type UpdateDIDRequest = {

@@ -1,3 +1,3 @@
-import { KMSStorage } from "@extrimian/kms-core";
+import { KMSStorage } from "@quarkid/kms-core";
 export interface AgentSecureStorage extends KMSStorage {
 }

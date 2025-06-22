@@ -10,8 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Messaging = void 0;
-const did_core_1 = require("@extrimian/did-core");
-const kms_core_1 = require("@extrimian/kms-core");
+const did_core_1 = require("@quarkid/did-core");
+const kms_core_1 = require("@quarkid/kms-core");
 const did_1 = require("../models/did");
 class Messaging {
     constructor(args) {

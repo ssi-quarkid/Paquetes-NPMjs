@@ -15,7 +15,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ConnectableTransport = exports.SelectiveDisclosure = exports.WACIProtocol = exports.WACICredentialOfferSucceded = exports.WACICredentialOfferResult = exports.WACICredentialOfferRejected = exports.VCProtocol = exports.VCMessageType = exports.OpenIDProtocol = exports.CredentialFlow = exports.WebsocketTransport = exports.WebsocketServerTransport = exports.WebsocketClientTransport = exports.DWNTransport = exports.DID = exports.AgentModenaUniversalResolver = exports.AgentModenaResolver = exports.IdentityPlainTextDataShareBehavior = exports.Agent = exports.VerifiableCredential = void 0;
-var vc_core_1 = require("@extrimian/vc-core");
+var vc_core_1 = require("@quarkid/vc-core");
 Object.defineProperty(exports, "VerifiableCredential", { enumerable: true, get: function () { return vc_core_1.VerifiableCredential; } });
 var agent_1 = require("./agent");
 Object.defineProperty(exports, "Agent", { enumerable: true, get: function () { return agent_1.Agent; } });

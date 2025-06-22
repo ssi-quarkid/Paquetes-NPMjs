@@ -10,8 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AgentModenaRegistry = exports.AgentModenaUniversalRegistry = exports.VMKey = exports.IAgentSidetreeRegistry = exports.IAgentRegistry = void 0;
-const kms_core_1 = require("@extrimian/kms-core");
-const did_registry_1 = require("@extrimian/did-registry");
+const kms_core_1 = require("@quarkid/kms-core");
+const did_registry_1 = require("@quarkid/did-registry");
 const modena_sdk_1 = require("@extrimian/modena-sdk");
 class IAgentRegistry {
     initialize(params) {

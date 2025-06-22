@@ -20,7 +20,7 @@
 		"typescript": "^4.5.4"
 	},
 	"dependencies": {
-		"@extrimian/did-core":  "1.1.0",
+		"@quarkid/did-core":  "1.1.0",
 		"jsonld": "^5.2.0"
 	}
 }

@@ -1,5 +1,5 @@
 import { IssuerData, VerifiableCredentialWithInfo } from "@quarkid/agent/src/vc/protocols/waci-protocol";
-import { VerifiableCredential } from "@extrimian/vc-core";
+import { VerifiableCredential } from "@quarkid/vc-core";
 import { Agent } from "../../agent";
 import { DID } from "../../models/did";
 import { LiteEvent } from "../../utils/lite-event";

@@ -730,23 +730,6 @@
   dependencies:
     reflect-metadata "^0.1.13"
 
-"@extrimian/did-registry@^1.5.0":
-  version "1.6.0"
-  resolved "https://registry.npmjs.org/@extrimian/did-registry/-/did-registry-1.6.0.tgz"
-  integrity sha512-O15MmutdR0Xx9S3zxSe2lRkZeiTroI75xpvXrwOU47hlgaEYjWQUvA5v3phPqrSgzrdBq0fX/umOIjE4qzJa8w==
-  dependencies:
-    "@decentralized-identity/ion-sdk" "0.5.0"
-    "@extrimian/core" "1.0.5"
-    "@extrimian/did-core" "1.1.0"
-    "@extrimian/kms-client" "1.4.0-0"
-    "@extrimian/kms-core" "1.4.0-0"
-    "@extrimian/modena-sdk" "^1.3.1"
-    "@types/node-fetch" "^2.6.1"
-    bs58 "^5.0.0"
-    multibase "^4.0.6"
-    node-fetch "^2.6.1"
-    text-encoding "^0.7.0"
-
 "@extrimian/did-resolver@^1.4.1":
   version "1.4.4"
   resolved "https://registry.npmjs.org/@extrimian/did-resolver/-/did-resolver-1.4.4.tgz"
@@ -784,51 +767,7 @@
     "@extrimian/vc-core" "1.0.7"
     ts-jest "^28.0.1"
 
-"@extrimian/kms-client@1.4.0-0":
-  version "1.4.0-0"
-  resolved "https://registry.npmjs.org/@extrimian/kms-client/-/kms-client-1.4.0-0.tgz"
-  integrity sha512-bFZoYuD7A58liTAuXAbf3UGNIjmKmiEtA+aI0E6626PNb/0O0YOM9w26287xVmLl06R7PanLv1IAB07YoZeydg==
-  dependencies:
-    "@extrimian/did-core" "^1.0.8"
-    "@extrimian/kms-core" "1.4.0-0"
-    "@extrimian/kms-suite-bbsbls2020" "1.2.0-0"
-    "@extrimian/kms-suite-didcomm" "^1.1.0"
-    "@extrimian/kms-suite-didcomm-v2" "^1.3.0"
-    "@extrimian/kms-suite-es256k" "^1.1.0"
-    "@extrimian/kms-suite-rsa-signature-2018" "^1.1.0"
-    "@extrimian/vc-core" "1.0.7"
-    ts-jest "^28.0.1"
-
-"@extrimian/kms-client@1.4.0-2":
-  version "1.4.0-2"
-  resolved "https://registry.npmjs.org/@extrimian/kms-client/-/kms-client-1.4.0-2.tgz"
-  integrity sha512-G+mRltgkSINllLhBMRfqyReRMKL+X4yqXQd/jRIBWN3c0fVJjGBGXobd0UzBEuy0Xpx06s5gGwwg+32xbdASog==
-  dependencies:
-    "@extrimian/kms-core" "^1.4.0-2"
-    "@extrimian/kms-suite-bbsbls2020" "1.2.0-0"
-    "@extrimian/kms-suite-didcomm" "^1.1.0"
-    "@extrimian/kms-suite-didcomm-v2" "^1.3.0"
-    "@extrimian/kms-suite-es256k" "^1.2.2"
-    "@extrimian/kms-suite-rsa-signature-2018" "^1.1.0"
-    "@extrimian/vc-core" "1.0.7"
-    ts-jest "^28.0.1"
-
 "@extrimian/kms-core@^1.1.0":
-  version "1.3.0"
-  resolved "https://registry.npmjs.org/@extrimian/kms-core/-/kms-core-1.3.0.tgz"
-  integrity sha512-sHK0vGTFKfIjr6XxpKVAa2ovBeQ98BaGpIUPkmF4pQEoAkYkHlVoXyyIgOW7rgqcc6sY1iduolKLWVY5CcooCA==
-  dependencies:
-    "@extrimian/did-core" "1.0.7"
-    "@extrimian/vc-core" "1.0.7"
-    base64url "^3.0.1"
-    bs58 "^5.0.0"
-    did-jwt "^6.11.0"
-    jsonld "^5.2.0"
-    multibase "^4.0.6"
-    multiformats "^9.6.5"
-    text-encoding "^0.7.0"
-
-"@extrimian/kms-core@^1.2.0":
   version "1.3.0"
   resolved "https://registry.npmjs.org/@extrimian/kms-core/-/kms-core-1.3.0.tgz"
   integrity sha512-sHK0vGTFKfIjr6XxpKVAa2ovBeQ98BaGpIUPkmF4pQEoAkYkHlVoXyyIgOW7rgqcc6sY1iduolKLWVY5CcooCA==
@@ -858,23 +797,10 @@
     multiformats "^9.6.5"
     text-encoding "^0.7.0"
 
-"@extrimian/kms-core@^1.4.0-2", "@extrimian/kms-core@1.4.0-2":
+"@extrimian/kms-core@^1.4.0-2":
   version "1.4.0-2"
   resolved "https://registry.npmjs.org/@extrimian/kms-core/-/kms-core-1.4.0-2.tgz"
   integrity sha512-DrH2eDuLvt/+TyXS2lmvzel22qOpPyYsgSRTD+KJ5RfdZYiPrCs6uvC4PevQy0dRQUd9FWxun9UYnpxkpEgcVw==
-  dependencies:
-    base64url "^3.0.1"
-    bs58 "^5.0.0"
-    did-jwt "^6.11.0"
-    jsonld "^5.2.0"
-    multibase "^4.0.6"
-    multiformats "^9.6.5"
-    text-encoding "^0.7.0"
-
-"@extrimian/kms-core@1.4.0-0":
-  version "1.4.0-0"
-  resolved "https://registry.npmjs.org/@extrimian/kms-core/-/kms-core-1.4.0-0.tgz"
-  integrity sha512-m64H2/xPZ2TalGNX7VEvWvpJVw8BS89wTrc2j1BGF31ho0LzzOpy3D1xP9ejWcnWKZLq6ZASAUF4eqb8Sin2GA==
   dependencies:
     base64url "^3.0.1"
     bs58 "^5.0.0"
@@ -1449,16 +1375,16 @@
   version "1.1.0"
   resolved "file:packages/agent/core"
   dependencies:
-    "@extrimian/did-core" "1.1.0"
-    "@extrimian/did-registry" "^1.5.0"
     "@extrimian/did-resolver" "^1.4.1"
     "@extrimian/dwn-client" "^1.2.0"
-    "@extrimian/kms-client" "1.4.0-2"
-    "@extrimian/kms-core" "1.4.0-2"
     "@extrimian/modena-sdk" "1.3.2"
-    "@extrimian/vc-core" "1.1.0-0"
     "@extrimian/vc-verifier" "1.2.0-0"
     "@extrimian/waci" "~3.0.0"
+    "@quarkid/did-core" "*"
+    "@quarkid/did-registry" "*"
+    "@quarkid/kms-client" "*"
+    "@quarkid/kms-core" "*"
+    "@quarkid/vc-core" "*"
     "@types/base-64" "^1.0.0"
     async-lock "^1.4.0"
     axios "^1.4.0"
@@ -1470,23 +1396,23 @@
     socket.io "4.6.1"
     socket.io-client "4.6.1"
 
-"@quarkid/did-core@file:/Users/jake/Desktop/blockmed-demo/Paquetes-NPMjs/packages/did/core":
+"@quarkid/did-core@*", "@quarkid/did-core@file:/Users/jake/Desktop/blockmed-demo/Paquetes-NPMjs/packages/did/core":
   version "1.0.0"
   resolved "file:packages/did/core"
   dependencies:
     reflect-metadata "^0.1.13"
 
-"@quarkid/did-registry@file:/Users/jake/Desktop/blockmed-demo/Paquetes-NPMjs/packages/did/registry":
+"@quarkid/did-registry@*", "@quarkid/did-registry@file:/Users/jake/Desktop/blockmed-demo/Paquetes-NPMjs/packages/did/registry":
   version "1.0.0"
   resolved "file:packages/did/registry"
   dependencies:
     "@bsv/sdk" "^1.6.0"
     "@decentralized-identity/ion-sdk" "0.5.0"
     "@extrimian/core" "1.0.5"
-    "@extrimian/did-core" "1.1.0"
-    "@extrimian/kms-client" "1.4.0-0"
-    "@extrimian/kms-core" "1.4.0-0"
     "@extrimian/modena-sdk" "^1.3.1"
+    "@quarkid/did-core" "*"
+    "@quarkid/kms-client" "*"
+    "@quarkid/kms-core" "*"
     "@types/node-fetch" "^2.6.12"
     bs58 "^5.0.0"
     multibase "^4.0.6"
@@ -1497,7 +1423,7 @@
   version "1.0.0"
   resolved "file:packages/did/resolver"
   dependencies:
-    "@extrimian/did-core" "1.1.0"
+    "@quarkid/did-core" "*"
     axios "^0.27.2"
     reflect-metadata "^0.1.13"
 
@@ -1520,20 +1446,20 @@
     multiformats "^9.6.5"
     uuid "^8.3.2"
 
-"@quarkid/kms-client@file:/Users/jake/Desktop/blockmed-demo/Paquetes-NPMjs/packages/kms/client":
+"@quarkid/kms-client@*", "@quarkid/kms-client@file:/Users/jake/Desktop/blockmed-demo/Paquetes-NPMjs/packages/kms/client":
   version "1.0.0"
   resolved "file:packages/kms/client"
   dependencies:
-    "@extrimian/kms-core" "^1.4.0-2"
     "@extrimian/kms-suite-bbsbls2020" "1.2.0-0"
     "@extrimian/kms-suite-didcomm" "^1.1.0"
     "@extrimian/kms-suite-didcomm-v2" "^1.3.0"
     "@extrimian/kms-suite-es256k" "^1.2.2"
     "@extrimian/kms-suite-rsa-signature-2018" "^1.1.0"
-    "@extrimian/vc-core" "1.0.7"
+    "@quarkid/kms-core" "*"
+    "@quarkid/vc-core" "*"
     ts-jest "^28.0.1"
 
-"@quarkid/kms-core@file:/Users/jake/Desktop/blockmed-demo/Paquetes-NPMjs/packages/kms/core":
+"@quarkid/kms-core@*", "@quarkid/kms-core@file:/Users/jake/Desktop/blockmed-demo/Paquetes-NPMjs/packages/kms/core":
   version "1.0.0"
   resolved "file:packages/kms/core"
   dependencies:
@@ -1549,7 +1475,7 @@
   version "1.0.0"
   resolved "file:packages/kms/storage/vault"
   dependencies:
-    "@extrimian/kms-core" "^1.2.0"
+    "@quarkid/kms-core" "*"
     hashi-vault-js "0.4.11"
     ts-jest "^28.0.1"
 
@@ -1557,26 +1483,27 @@
   version "1.0.0"
   resolved "file:packages/kms/suite/vc/bbsbls2020"
   dependencies:
-    "@extrimian/did-core" "1.1.0"
     "@extrimian/kms-suite-jsonld" "^1.1.1"
-    "@extrimian/vc-core" "1.1.0-0"
     "@mattrglobal/jsonld-signatures-bbs" "0.12.0"
+    "@quarkid/did-core" "*"
+    "@quarkid/vc-core" "*"
 
-"@quarkid/vc-core@file:/Users/jake/Desktop/blockmed-demo/Paquetes-NPMjs/packages/vc/core":
+"@quarkid/vc-core@*", "@quarkid/vc-core@file:/Users/jake/Desktop/blockmed-demo/Paquetes-NPMjs/packages/vc/core":
   version "1.0.0"
   resolved "file:packages/vc/core"
   dependencies:
-    "@extrimian/did-core" "1.1.0"
+    "@quarkid/did-core" "*"
+    "@quarkid/kms-core" "*"
     jsonld "^5.2.0"
 
 "@quarkid/vc-verifier@file:/Users/jake/Desktop/blockmed-demo/Paquetes-NPMjs/packages/vc/verifier":
   version "1.0.0"
   resolved "file:packages/vc/verifier"
   dependencies:
-    "@extrimian/did-core" "1.1.0"
-    "@extrimian/kms-core" "^1.1.0"
-    "@extrimian/vc-core" "^1.0.7"
     "@mattrglobal/jsonld-signatures-bbs" "1.1.0"
+    "@quarkid/did-core" "*"
+    "@quarkid/kms-core" "*"
+    "@quarkid/vc-core" "*"
     axios "^0.27.2"
     jsonld "3.1.0"
     jsonld-document-loader "1.2.1"
@@ -1974,7 +1901,7 @@
   resolved "https://registry.npmjs.org/@types/node-cron/-/node-cron-3.0.8.tgz"
   integrity sha512-+z5VrCvLwiJUohbRSgHdyZnHzAaLuD/E2bBANw+NQ1l05Crj8dIxb/kKK+OEqRitV2Wr/LYLuEBenGDsHZVV5Q==
 
-"@types/node-fetch@^2.6.1", "@types/node-fetch@^2.6.12":
+"@types/node-fetch@^2.6.12":
   version "2.6.12"
   resolved "https://registry.npmjs.org/@types/node-fetch/-/node-fetch-2.6.12.tgz"
   integrity sha512-8nneRWKCg3rMtF69nLQJnOYUcbafYeFSjqkw3jCRLsqkWFlHaoQrr5mXmofFGOx3DKn7UfmBMyov8ySvLRVldA==
@@ -5509,7 +5436,7 @@ node-cron@^3.0.0:
   dependencies:
     uuid "8.3.2"
 
-node-fetch@^2.6.1, node-fetch@^2.6.12, node-fetch@^2.7.0:
+node-fetch@^2.6.12, node-fetch@^2.7.0:
   version "2.7.0"
   resolved "https://registry.npmjs.org/node-fetch/-/node-fetch-2.7.0.tgz"
   integrity sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==

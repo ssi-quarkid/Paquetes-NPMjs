@@ -1,5 +1,5 @@
-import { IJWK, KMSStorage } from "@extrimian/kms-core";
-import { Service } from '@extrimian/did-core';
+import { IJWK, KMSStorage } from "@quarkid/kms-core";
+import { Service } from '@quarkid/did-core';
 import { CreateDIDResponse } from "../models/create-did.response";
 import { PublishDIDResponse } from "../models/publish-did.response";
 import { IPublicKeys, ProcessResult, VerificationMethod } from "../models/interfaces";

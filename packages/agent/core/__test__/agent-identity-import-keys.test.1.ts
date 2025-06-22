@@ -1,6 +1,6 @@
-// import { VerifiableCredential } from "@extrimian/vc-core";
-import { KMSClient } from '@extrimian/kms-client';
-import { LANG, Suite } from '@extrimian/kms-core';
+// import { VerifiableCredential } from "@quarkid/vc-core";
+import { KMSClient } from '@quarkid/kms-client';
+import { LANG, Suite } from '@quarkid/kms-core';
 import {
     AgentModenaRegistry,
     AgentModenaUniversalResolver,

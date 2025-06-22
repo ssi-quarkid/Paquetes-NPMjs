@@ -1,7 +1,7 @@
 import { CredentialDisplay, IssuerData, VerifiableCredentialWithInfo } from "@quarkid/agent/src/vc/protocols/waci-protocol";
-import { Purpose } from "@extrimian/did-core";
+import { Purpose } from "@quarkid/did-core";
 import { IJWK, IKMS } from "@quarkid/kms-core";
-import { VerifiableCredential } from "@extrimian/vc-core";
+import { VerifiableCredential } from "@quarkid/vc-core";
 import { VCSuiteError } from "@extrimian/vc-verifier";
 import { CredentialManifestStyles, PresentationDefinitionFrame } from "@extrimian/waci";
 import { Messaging } from "../messaging/messaging";

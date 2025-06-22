@@ -14,7 +14,7 @@ import { VCProtocol } from "./vc/protocols/vc-protocol";
 import { VC } from "./vc/vc";
 import { IStatusListAgentPlugin } from "./plugins/istatus-list-plugin";
 import { AgentPluginBase } from "./plugins/ivc-interceptor-plugin";
-import { VerifiableCredential } from "@extrimian/vc-core";
+import { VerifiableCredential } from "@quarkid/vc-core";
 export declare class Agent {
     private _messaging;
     get messaging(): Messaging;

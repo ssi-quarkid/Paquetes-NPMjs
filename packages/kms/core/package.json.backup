@@ -20,8 +20,8 @@
 		"typescript": "^4.5.4"
 	},
 	"peerDependencies": {
-		"@extrimian/did-core": "x.x.x",
-		"@extrimian/vc-core": "x.x.x"
+		"@quarkid/did-core": "*",
+		"@quarkid/vc-core": "*"
 	},
 	"dependencies": {
 		"base64url": "^3.0.1",

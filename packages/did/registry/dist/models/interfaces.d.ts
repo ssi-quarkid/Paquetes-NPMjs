@@ -1,5 +1,5 @@
-import { Purpose } from "@extrimian/did-core";
-import { IJWK } from "@extrimian/kms-core";
+import { Purpose } from "@quarkid/did-core";
+import { IJWK } from "@quarkid/kms-core";
 export interface ProcessResult {
     canonicalId: string;
     recoveryKey: any[];

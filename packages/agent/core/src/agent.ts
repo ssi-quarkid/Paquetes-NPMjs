@@ -18,7 +18,7 @@ import { VC } from "./vc/vc";
 import { LiteEvent } from "./utils/lite-event";
 import { IStatusListAgentPlugin } from "./plugins/istatus-list-plugin";
 import { AgentPluginBase } from "./plugins/ivc-interceptor-plugin";
-import { VerifiableCredential } from "@extrimian/vc-core";
+import { VerifiableCredential } from "@quarkid/vc-core";
 
 export class Agent {
     private _messaging: Messaging;

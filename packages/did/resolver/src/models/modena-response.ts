@@ -1,4 +1,4 @@
-import { DIDDocument } from "@extrimian/did-core";
+import { DIDDocument } from "@quarkid/did-core";
 import { DIDDocumentMetadata } from "./did-doc-metadata";
 
 export class ModenaResponse {

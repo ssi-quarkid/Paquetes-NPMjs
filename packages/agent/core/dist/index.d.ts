@@ -1,4 +1,4 @@
-export { VerifiableCredential } from "@extrimian/vc-core";
+export { VerifiableCredential } from "@quarkid/vc-core";
 export { Agent } from "./agent";
 export { DataShareBehavior } from "./data-share-behaviours/data-share-behavior";
 export { IdentityDataShareBehavior, IdentityExportParams, IdentityExportResult } from "./data-share-behaviours/identity-data-share-behavior";
@@ -23,4 +23,4 @@ export { WACICredentialOfferRejected, WACICredentialOfferResult, WACICredentialO
 export { VerifiableCredentialWithInfo, SelectiveDisclosure } from "./vc/protocols/waci-protocol";
 export { ConnectableTransport } from "./models/transports/connectable-transport";
 export { CredentialManifestStyles, InputDescriptor, WACIMessage } from "@extrimian/waci";
-export { Issuer } from "@extrimian/vc-core";
+export { Issuer } from "@quarkid/vc-core";

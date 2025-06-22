@@ -1,4 +1,4 @@
-import { DIDDocument } from '@extrimian/did-core';
+import { DIDDocument } from '@quarkid/did-core';
 import { DWNClient, MessageStorage } from '@extrimian/dwn-client';
 import { Agent } from '../../agent';
 import { ILiteEvent } from '../../utils/lite-event';

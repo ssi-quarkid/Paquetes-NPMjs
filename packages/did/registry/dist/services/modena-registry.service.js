@@ -38,8 +38,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ModenaRegistryBase = void 0;
 var modena_sdk_1 = require("@extrimian/modena-sdk");
-var kms_client_1 = require("@extrimian/kms-client");
-var kms_core_1 = require("@extrimian/kms-core");
+var kms_client_1 = require("@quarkid/kms-client");
+var kms_core_1 = require("@quarkid/kms-core");
 var node_fetch_1 = require("node-fetch");
 var ModenaRegistryBase = /** @class */ (function () {
     function ModenaRegistryBase() {

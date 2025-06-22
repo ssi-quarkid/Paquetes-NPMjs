@@ -1,6 +1,6 @@
-import { IJWK, IKMS } from "@extrimian/kms-core";
-import { Did, ModenaUniversalRegistry } from "@extrimian/did-registry";
-import { Purpose, Service } from "@extrimian/did-core";
+import { IJWK, IKMS } from "@quarkid/kms-core";
+import { Did, ModenaUniversalRegistry } from "@quarkid/did-registry";
+import { Purpose, Service } from "@quarkid/did-core";
 import { DID } from "./did";
 import { DIDDocumentMetadata } from "@extrimian/modena-sdk";
 export declare abstract class IAgentRegistry {

@@ -26,7 +26,7 @@
     "typescript": "^4.5.4"
   },
   "dependencies": {
-    "@quarkid/did-core":  "1.1.0",
+    "@quarkid/did-core": "*",
     "@quarkid/did-registry": "*",
     "@extrimian/did-resolver": "^1.4.1",
     "@extrimian/dwn-client": "^1.2.0",
