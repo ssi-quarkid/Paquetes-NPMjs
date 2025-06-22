@@ -27,11 +27,11 @@
         "@extrimian/kms-suite-didcomm-v2": "^1.3.0",
         "@extrimian/kms-suite-es256k": "^1.2.2",
         "@extrimian/kms-suite-rsa-signature-2018": "^1.1.0",
-        "@extrimian/vc-core": "1.0.7",
-        "@extrimian/kms-core": "^1.4.0-2",
+        "@quarkid/vc-core": "*",
+        "@quarkid/kms-core": "*",
         "ts-jest": "^28.0.1"
     },
     "peerDependencies": {
-        "@extrimian/did-core": "x.x.x"
+        "@quarkid/did-core": "*"
     }
 }

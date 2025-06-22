@@ -211,5 +211,5 @@ export declare class VC {
     deriveVC(params: {
         vc: VerifiableCredential;
         deriveProofFrame: PresentationDefinitionFrame;
-    }): Promise<import("@extrimian/vc-core").VerifiableCredential<any>>;
+    }): Promise<VerifiableCredential<any>>;
 }

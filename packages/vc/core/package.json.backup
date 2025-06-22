@@ -1,5 +1,5 @@
 {
-	"name": "@quarkid/kms-core",
+	"name": "@quarkid/vc-core",
 	"version": "1.0.0",
 	"description": "",
 	"main": "dist/index.js",
@@ -19,17 +19,8 @@
 		"ts-node": "^10.4.0",
 		"typescript": "^4.5.4"
 	},
-	"peerDependencies": {
-		"@quarkid/did-core": "*",
-		"@quarkid/vc-core": "*"
-	},
 	"dependencies": {
-		"base64url": "^3.0.1",
-		"bs58": "^5.0.0",
-		"did-jwt": "^6.11.0",
-		"jsonld": "^5.2.0",
-		"multibase": "^4.0.6",
-		"multiformats": "^9.6.5",
-		"text-encoding": "^0.7.0"
+		"@extrimian/did-core":  "1.1.0",
+		"jsonld": "^5.2.0"
 	}
 }

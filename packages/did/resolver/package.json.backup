@@ -1,13 +1,13 @@
 {
-	"name": "@quarkid/kms-core",
+	"name": "@quarkid/did-resolver",
 	"version": "1.0.0",
 	"description": "",
 	"main": "dist/index.js",
 	"typings": "dist/index.d.ts",
 	"scripts": {
 		"start": "ts-node src/index.ts",
-		"build": "tsc",
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"build": "tsc --project tsconfig.build.json",
+		"test": "jest"
 	},
 	"keywords": [],
 	"author": "Quarkid",
@@ -19,17 +19,9 @@
 		"ts-node": "^10.4.0",
 		"typescript": "^4.5.4"
 	},
-	"peerDependencies": {
-		"@quarkid/did-core": "*",
-		"@quarkid/vc-core": "*"
-	},
 	"dependencies": {
-		"base64url": "^3.0.1",
-		"bs58": "^5.0.0",
-		"did-jwt": "^6.11.0",
-		"jsonld": "^5.2.0",
-		"multibase": "^4.0.6",
-		"multiformats": "^9.6.5",
-		"text-encoding": "^0.7.0"
+		"@extrimian/did-core": "1.1.0",
+		"axios": "^0.27.2",
+		"reflect-metadata": "^0.1.13"
 	}
 }
