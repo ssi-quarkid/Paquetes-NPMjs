@@ -57,26 +57,26 @@ class Agent {
         this.agentStorage = params.agentStorage;
         this.pluginDispatcher = new plugin_dispatcher_1.PluginDispatcher(params.agentPlugins.filter(x => x.canHandle));
         this.vcProtocols = params.vcProtocols;
-        this.kms = new kms_client_1.KMSClient({
-            lang: params.mnemonicLang || kms_core_1.LANG.en,
-            storage: this.agentSecureStorage,
-            didResolver: (did) => this.resolver.resolve(did_1.DID.from(did)),
-            mobile: false,
-        });
         if (!params.didDocumentResolver) {
             throw new Error("didDocumentResolver is required. You can define a custom resolver that extends AgentDocumentResolver interface or set an universal resolver endpoint URL.");
         }
         if (!params.didDocumentRegistry) {
             throw new Error("didDocumentRegistry is required. You can define a custom registry that extends AgentDocumentRegistry interface or set a modena endpoint URL.");
         }
+        this.resolver = params.didDocumentResolver;
+        this.registry = params.didDocumentRegistry;
+        this.kms = new kms_client_1.KMSClient({
+            lang: params.mnemonicLang || kms_core_1.LANG.en,
+            storage: this.agentSecureStorage,
+            didResolver: (did) => this.resolver.resolve(did_1.DID.from(did)),
+            mobile: false,
+        });
         this.identity = new agent_identity_1.AgentIdentity({
             agentStorage: this.agentStorage,
             kms: this.kms,
             registry: this.registry,
             resolver: this.resolver,
         });
-        this.resolver = params.didDocumentResolver;
-        this.registry = params.didDocumentRegistry;
         this.registry.initialize({ kms: this.kms });
         this.agentKMS = new agent_kms_1.AgentKMS({
             identity: this.identity,

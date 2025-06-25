@@ -204,22 +204,50 @@ export class VC {
     }): Promise<VerifiableCredential<VCType>> {
 
         let publicKeys: IJWK[];
+        let suiteType: Suite;
 
         if (!opts.publicKey) {
-            const bbsblsKeys = await this.kms.getPublicKeysBySuiteType(Suite.Bbsbls2020);
+            // Try to get ES256k keys first (for BSV compatibility)
+            const es256kKeys = await this.kms.getPublicKeysBySuiteType(Suite.ES256k);
+            
+            if (es256kKeys.length > 0) {
+                publicKeys = es256kKeys;
+                suiteType = Suite.ES256k;
+            } else {
+                // Fallback to BBS+ keys
+                const bbsblsKeys = await this.kms.getPublicKeysBySuiteType(Suite.Bbsbls2020);
 
-            if (bbsblsKeys.length == 0) {
-                throw new Error("KMS doesn't contains keys for bbsbls2020. You need to create this kind of keys to sign verifiable credentials")
+                if (bbsblsKeys.length == 0) {
+                    throw new Error("KMS doesn't contains keys for ES256k or Bbsbls2020. You need to create this kind of keys to sign verifiable credentials")
+                }
+
+                publicKeys = bbsblsKeys;
+                suiteType = Suite.Bbsbls2020;
             }
-
-            publicKeys = bbsblsKeys;
         } else {
             publicKeys = [opts.publicKey];
+            // Determine suite type from the public key
+            if (opts.publicKey.crv === 'secp256k1') {
+                suiteType = Suite.ES256k;
+            } else {
+                suiteType = Suite.Bbsbls2020;
+            }
         }
 
         const didDocument = await this.resolver.resolve(opts.did || this.identity.getOperationalDID());
 
-        const validPublicKeys = didDocument.verificationMethod.filter(x => x.type == "Bls12381G1Key2020") as VerificationMethodJwk[];
+        // Filter verification methods based on suite type
+        let validPublicKeys: VerificationMethodJwk[];
+        if (suiteType === Suite.ES256k) {
+            // For ES256k, look for JsonWebKey2020 or EcdsaSecp256k1VerificationKey2019
+            validPublicKeys = didDocument.verificationMethod.filter(x => 
+                x.type === "JsonWebKey2020" || 
+                x.type === "EcdsaSecp256k1VerificationKey2019"
+            ) as VerificationMethodJwk[];
+        } else {
+            // For BBS+, look for Bls12381G1Key2020
+            validPublicKeys = didDocument.verificationMethod.filter(x => x.type == "Bls12381G1Key2020") as VerificationMethodJwk[];
+        }
 
         //Comienzo a comparar las claves que estan en el DID Document con las que tiene el KMS hasta encontrar un match
         const firstValidPbk = validPublicKeys.find(didDocKey =>
@@ -242,7 +270,7 @@ export class VC {
         }
 
         // Si contiene la clave, se procede a la firma
-        const vc = await this.kms.signVC(Suite.Bbsbls2020,
+        const vc = await this.kms.signVC(suiteType,
             firstValidPbk.publicKeyJwk as IJWK,
             opts.credential,
             (opts.did || this.identity.getOperationalDID()).value,

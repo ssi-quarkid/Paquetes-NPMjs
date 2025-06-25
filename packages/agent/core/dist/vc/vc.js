@@ -158,18 +158,46 @@ class VC {
     signVC(opts) {
         return __awaiter(this, void 0, void 0, function* () {
             let publicKeys;
+            let suiteType;
             if (!opts.publicKey) {
-                const bbsblsKeys = yield this.kms.getPublicKeysBySuiteType(kms_core_1.Suite.Bbsbls2020);
-                if (bbsblsKeys.length == 0) {
-                    throw new Error("KMS doesn't contains keys for bbsbls2020. You need to create this kind of keys to sign verifiable credentials");
+                // Try to get ES256k keys first (for BSV compatibility)
+                const es256kKeys = yield this.kms.getPublicKeysBySuiteType(kms_core_1.Suite.ES256k);
+                if (es256kKeys.length > 0) {
+                    publicKeys = es256kKeys;
+                    suiteType = kms_core_1.Suite.ES256k;
                 }
-                publicKeys = bbsblsKeys;
+                else {
+                    // Fallback to BBS+ keys
+                    const bbsblsKeys = yield this.kms.getPublicKeysBySuiteType(kms_core_1.Suite.Bbsbls2020);
+                    if (bbsblsKeys.length == 0) {
+                        throw new Error("KMS doesn't contains keys for ES256k or Bbsbls2020. You need to create this kind of keys to sign verifiable credentials");
+                    }
+                    publicKeys = bbsblsKeys;
+                    suiteType = kms_core_1.Suite.Bbsbls2020;
+                }
             }
             else {
                 publicKeys = [opts.publicKey];
+                // Determine suite type from the public key
+                if (opts.publicKey.crv === 'secp256k1') {
+                    suiteType = kms_core_1.Suite.ES256k;
+                }
+                else {
+                    suiteType = kms_core_1.Suite.Bbsbls2020;
+                }
             }
             const didDocument = yield this.resolver.resolve(opts.did || this.identity.getOperationalDID());
-            const validPublicKeys = didDocument.verificationMethod.filter(x => x.type == "Bls12381G1Key2020");
+            // Filter verification methods based on suite type
+            let validPublicKeys;
+            if (suiteType === kms_core_1.Suite.ES256k) {
+                // For ES256k, look for JsonWebKey2020 or EcdsaSecp256k1VerificationKey2019
+                validPublicKeys = didDocument.verificationMethod.filter(x => x.type === "JsonWebKey2020" ||
+                    x.type === "EcdsaSecp256k1VerificationKey2019");
+            }
+            else {
+                // For BBS+, look for Bls12381G1Key2020
+                validPublicKeys = didDocument.verificationMethod.filter(x => x.type == "Bls12381G1Key2020");
+            }
             //Comienzo a comparar las claves que estan en el DID Document con las que tiene el KMS hasta encontrar un match
             const firstValidPbk = validPublicKeys.find(didDocKey => publicKeys.some(kmsKey => didDocKey.publicKeyJwk.x == kmsKey.x &&
                 didDocKey.publicKeyJwk.y == kmsKey.y));
@@ -185,7 +213,7 @@ class VC {
                 }
             }
             // Si contiene la clave, se procede a la firma
-            const vc = yield this.kms.signVC(kms_core_1.Suite.Bbsbls2020, firstValidPbk.publicKeyJwk, opts.credential, (opts.did || this.identity.getOperationalDID()).value, (opts.did || this.identity.getOperationalDID()).value + firstValidPbk.id, opts.purpose || new did_core_1.AssertionMethodPurpose());
+            const vc = yield this.kms.signVC(suiteType, firstValidPbk.publicKeyJwk, opts.credential, (opts.did || this.identity.getOperationalDID()).value, (opts.did || this.identity.getOperationalDID()).value + firstValidPbk.id, opts.purpose || new did_core_1.AssertionMethodPurpose());
             return vc;
         });
     }
