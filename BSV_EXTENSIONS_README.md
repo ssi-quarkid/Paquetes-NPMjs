@@ -34,7 +34,7 @@ const bbsblsKeys = await this.kms.getPublicKeysBySuiteType(Suite.Bbsbls2020);
 if (!opts.publicKey) {
     // Try to get ES256k keys first (for BSV compatibility)
     const es256kKeys = await this.kms.getPublicKeysBySuiteType(Suite.ES256k);
-    
+
     if (es256kKeys.length > 0) {
         publicKeys = es256kKeys;
         suiteType = Suite.ES256k;
@@ -71,10 +71,10 @@ export class BsvWalletKMS implements IKMS {
 
     // Creates ES256k key pairs using BSV SDK
     async createKeyPair(suite: Suite): Promise<IVCJsonLDKeyPair>
-    
+
     // Signs data using ES256k keys
     async sign(suite: Suite, publicKeyJWK: IJWK, content: any): Promise<string>
-    
+
     // Verifies signatures
     async verifySignature(publicKeyJWK: IJWK, originalContent: string, signature: string): Promise<boolean>
 }
@@ -115,10 +115,10 @@ import { IVCSuite, IVCJsonLDKeyPair } from '@quarkid/kms-core';
 ```typescript
 export class ES256kVCSuite implements IVCSuite {
     private static kmsInstance: any;
-    
+
     // Creates ES256k key pairs for VC operations
     async create(): Promise<IVCJsonLDKeyPair>
-    
+
     // Signs verifiable credentials with ES256k
     async sign(credential: VerifiableCredential, keyPair: IVCJsonLDKeyPair): Promise<VerifiableCredential>
 }
@@ -142,7 +142,7 @@ import { DIDDocument, Purpose, DIDCommMessage } from '@quarkid/did-core';
 export class BsvOverlayRegistryAdapter extends IAgentRegistry {
     // Integrates with BSV overlay for DID operations
     async createDID(createRequest: CreateDIDRequest): Promise<CreateDIDResponse>
-    
+
     // Uses BSV wallet for key management
     getKMS(): IKMS
 }
@@ -264,3 +264,4 @@ When modifying BSV extensions:
 ---
 
 **Note**: These extensions are specifically designed for Bitcoin SV integration and may not be compatible with other blockchain networks.
+
