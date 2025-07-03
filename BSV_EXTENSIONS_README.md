@@ -1,267 +1,217 @@
-# BSV Extensions for QuarkID
+# BSV Extensions for QuarkID Packages
 
-This document describes the Bitcoin SV (BSV) specific extensions and modifications made to the QuarkID framework to enable BSV blockchain integration for decentralized identity and verifiable credentials.
+This document outlines the modifications made to QuarkID packages to support Bitcoin SV (BSV) blockchain integration.
 
-## Overview
+## Modified Packages
 
-The BSV extensions enable QuarkID to work with the BSVblockchain by:
+### 1. @quarkid/agent (Core)
 
-- Supporting ES256k (secp256k1) cryptographic keys for BSV compatibility
-- Implementing BSV wallet integration for key management
-- Adding BSV overlay registry and resolver support
-- Creating custom KMS (Key Management System) for BSV wallets
+**Location:** `Paquetes-NPMjs/packages/agent/core/src/vc/verifiable-credential.ts`
 
-## Modified QuarkID Packages
+**Changes:**
+- Modified VC signing to support both BBS+ and ES256k key types
+- Added automatic key type detection and selection
+- Prioritizes ES256k for BSV compatibility, falls back to BBS+
 
-### 1. @quarkid/agent - Modified VC Module
-
-**File Modified:** `Paquetes-NPMjs/packages/agent/core/src/vc/vc.ts`
-
-**Changes Made:**
-
-- **Enhanced Key Support**: Modified the `signVC` method to support both ES256k and BBS+ keys
-- **Key Type Detection**: Added logic to automatically detect and use ES256k keys for BSV compatibility
-- **Fallback Mechanism**: Implemented fallback from ES256k to BBS+ keys if ES256k keys are not available
-- **Suite Selection**: Added dynamic suite selection based on key type (ES256k vs BBS+)
-
-**Key Code Changes:**
-
+**Key Code:**
 ```typescript
-// Before: Only supported BBS+ keys
-const bbsblsKeys = await this.kms.getPublicKeysBySuiteType(Suite.Bbsbls2020);
+// Check available key types in KMS
+const availableKeys = await this.kms.getAllPublicKeys();
+const es256kKeys = availableKeys.filter(key => key.crv === 'secp256k1');
+const bbsKeys = availableKeys.filter(key => key.kty === 'EC' && key.crv === 'BLS12381_G1');
 
-// After: Supports both ES256k and BBS+ keys
-if (!opts.publicKey) {
-    // Try to get ES256k keys first (for BSV compatibility)
-    const es256kKeys = await this.kms.getPublicKeysBySuiteType(Suite.ES256k);
-
-    if (es256kKeys.length > 0) {
-        publicKeys = es256kKeys;
-        suiteType = Suite.ES256k;
-    } else {
-        // Fallback to BBS+ keys
-        const bbsblsKeys = await this.kms.getPublicKeysBySuiteType(Suite.Bbsbls2020);
-        // ... fallback logic
-    }
-}
+// Prefer ES256k for BSV compatibility, fallback to BBS+
+const signingKey = es256kKeys.length > 0 ? es256kKeys[0] : bbsKeys[0];
 ```
 
-**Impact:**
+### 2. @quarkid/kms-core
 
-- Enables BSV-compatible verifiable credential signing
-- Maintains backward compatibility with existing BBS+ implementations
-- Allows seamless integration with BSV wallets
+**Location:** `Paquetes-NPMjs/packages/kms/core/src/BsvWalletKMS.ts`
 
-### 2. @quarkid/kms-core - BsvWalletKMS Implementation
+**Changes:**
+- Added `BsvWalletKMS` class implementing `IKMS` interface
+- Generates ES256k keys compatible with BSV transactions
+- Stores keys in JWK format for QuarkID compatibility
+- Provides key creation and management for BSV operations
 
-**New File Created:** `register/back/src/plugins/BsvWalletKMS.ts`
-
-**Purpose:**
-
-- Implements the `IKMS` interface from `@quarkid/kms-core`
-- Bridges BSV wallet functionality with QuarkID's expected KMS interface
-- Manages ES256k key pairs for BSV operations
-
-**Key Features:**
-
+**Key Code:**
 ```typescript
 export class BsvWalletKMS implements IKMS {
-    private walletClient: WalletClient;
-    private keyStore: Map<string, { privateKey: string; publicKey: string; jwk: IJWK; keyId: string }>;
-
-    // Creates ES256k key pairs using BSV SDK
-    async createKeyPair(suite: Suite): Promise<IVCJsonLDKeyPair>
-
-    // Signs data using ES256k keys
-    async sign(suite: Suite, publicKeyJWK: IJWK, content: any): Promise<string>
-
-    // Verifies signatures
-    async verifySignature(publicKeyJWK: IJWK, originalContent: string, signature: string): Promise<boolean>
+  async create(suite: Suite): Promise<{ publicKeyJWK: IJWK }> {
+    const privateKey = PrivateKey.fromRandom();
+    const publicKey = privateKey.toPublicKey();
+    
+    const jwk: IJWK = {
+      kty: 'EC',
+      crv: 'secp256k1',
+      x: Utils.toBase64(publicKey.getX().toArray()),
+      y: Utils.toBase64(publicKey.getY().toArray())
+    };
+    
+    return { publicKeyJWK: jwk };
+  }
 }
 ```
 
-**Key Methods:**
+### 3. @quarkid/kms-suite-vc-es256k
 
-- `create()`: Creates new ES256k key pairs
-- `sign()`: Signs data using ES256k cryptography
-- `verifySignature()`: Verifies ES256k signatures
-- `export()`: Exports keys in JWK format
-- `import()`: Imports existing keys
+**Location:** `Paquetes-NPMjs/packages/kms/suite/vc/es256k/src/ES256kVCSuite.ts`
 
-**Integration:**
+**Changes:**
+- New package providing ES256k Verifiable Credential signing
+- Implements `IVCSuite` interface for QuarkID compatibility
+- Uses BSV SDK for cryptographic operations
+- Supports WIF format private keys
 
-- Replaces the default QuarkID KMS in the agent
-- Provides ES256k key management for DID and VC operations
-- Integrates with BSV wallet for key storage and management
-
-### 3. @quarkid/vc-core - VerifiableCredential Types
-
-**Usage:** Used throughout the BSV extensions for type definitions
-
-**Key Types Used:**
-
-```typescript
-import { VerifiableCredential } from '@quarkid/vc-core';
-import { IVCSuite, IVCJsonLDKeyPair } from '@quarkid/kms-core';
-```
-
-**Custom Extensions:**
-
-- **ES256kVCSuite**: Custom VC suite implementation for ES256k keys
-- **BSV-specific credential formats**: Support for BSV-compatible credential structures
-
-**New File Created:** `register/back/src/suites/ES256kVCSuite.ts`
-
+**Key Code:**
 ```typescript
 export class ES256kVCSuite implements IVCSuite {
-    private static kmsInstance: any;
-
-    // Creates ES256k key pairs for VC operations
-    async create(): Promise<IVCJsonLDKeyPair>
-
-    // Signs verifiable credentials with ES256k
-    async sign(credential: VerifiableCredential, keyPair: IVCJsonLDKeyPair): Promise<VerifiableCredential>
+  async sign(
+    documentToSign: any,
+    did: string,
+    verificationMethodId: string,
+    purpose: Purpose
+  ): Promise<VerifiableCredential> {
+    const privKey = PrivateKey.fromWif(this.keyPair.privateKey);
+    const messageBuffer = Buffer.from(message, 'utf8');
+    const signature = privKey.sign(Array.from(messageBuffer));
+    
+    return {
+      ...documentToSign,
+      proof: {
+        type: 'EcdsaSecp256k1Signature2019',
+        created: new Date().toISOString(),
+        proofPurpose: purpose.name || 'assertionMethod',
+        verificationMethod: verificationMethodId,
+        jws: signature.toDER('hex')
+      }
+    };
+  }
 }
 ```
 
-### 4. @quarkid/did-core - DID-Related Types and Interfaces
+### 4. @quarkid/vc-core
 
-**Usage:** Used for DID document structures and verification methods
+**Location:** `Paquetes-NPMjs/packages/vc/core/src/models/verifiable-credential.ts`
 
-**Key Types Used:**
+**Changes:**
+- Extended `VerifiableCredential` interface to support BSV-specific proof types
+- Added support for ES256k signature verification
+- Maintains W3C Verifiable Credentials compliance
 
+**Key Code:**
 ```typescript
-import { DIDDocument, Purpose, DIDCommMessage } from '@quarkid/did-core';
-```
-
-**BSV-Specific Extensions:**
-
-**New File Created:** `register/back/src/plugins/BsvOverlayRegistryAdapter.ts`
-
-```typescript
-export class BsvOverlayRegistryAdapter extends IAgentRegistry {
-    // Integrates with BSV overlay for DID operations
-    async createDID(createRequest: CreateDIDRequest): Promise<CreateDIDResponse>
-
-    // Uses BSV wallet for key management
-    getKMS(): IKMS
+export interface BSVVerifiableCredential extends VerifiableCredential {
+  proof?: {
+    type: 'EcdsaSecp256k1Signature2019';
+    created: string;
+    proofPurpose: string;
+    verificationMethod: string;
+    jws: string;
+  };
 }
 ```
 
-**New File Created:** `register/back/src/plugins/BsvOverlayResolver.ts`
+### 5. @quarkid/did-core
 
+**Location:** `Paquetes-NPMjs/packages/did/core/src/models/did-document.ts`
+
+**Changes:**
+- Added BSV-specific DID document types
+- Extended verification method types for ES256k keys
+- Support for both hex and JWK public key formats
+- Maintains W3C DID specification compliance
+
+**Key Code:**
 ```typescript
-export class BsvOverlayResolver implements IAgentResolver {
-    // Resolves DIDs from BSV overlay
-    async resolve(did: string): Promise<DIDDocument>
+export interface BSVDIDDocument extends DIDDocument {
+  verificationMethod: BSVVerificationMethod[];
+}
+
+export interface BSVVerificationMethod extends VerificationMethod {
+  type: 'EcdsaSecp256k1VerificationKey2019';
+  publicKeyHex?: string;
+  publicKeyJwk?: IJWK;
 }
 ```
 
-## Additional BSV Components
+## Integration Points
 
-### BSV Wallet Integration
+### Agent Integration
 
-**File:** `register/back/src/plugins/BsvWalletKMS.ts`
+The QuarkID Agent automatically detects and uses BSV-compatible components:
 
-- Integrates with `@bsv/sdk` for key generation and management
-- Uses `@bsv/wallet-toolbox-client` for wallet operations
-- Manages ES256k key pairs in a secure key store
+1. **KMS Replacement**: Agent replaces default KMS with `BsvWalletKMS`
+2. **VC Signing**: Uses ES256k keys for VC signing when available
+3. **DID Creation**: Creates DIDs with ES256k verification methods
+4. **Key Management**: Manages ES256k keys through BSV-compatible KMS
 
-### BSV Overlay Integration
+### BSV Blockchain Integration
 
-**Files:**
+The modified packages integrate with BSV blockchain through:
 
-- `register/back/src/plugins/BsvOverlayRegistry.ts`
-- `register/back/src/plugins/BsvOverlayRegistryAdapter.ts`
-- `register/back/src/plugins/BsvOverlayResolver.ts`
+1. **Transaction Creation**: Uses BSV SDK for transaction creation
+2. **Key Generation**: Generates ES256k keys compatible with BSV
+3. **Signature Verification**: Verifies signatures using BSV cryptographic primitives
+4. **DID Resolution**: Resolves DIDs through BSV overlay services
 
-**Purpose:**
+## Usage
 
-- Provides BSV blockchain integration for DID operations
-- Uses BSV overlay for DID registration and resolution
-- Integrates with BSV wallet for transaction signing
-
-## Usage Examples
-
-### Creating a DID with BSV Keys
+### Basic Setup
 
 ```typescript
-import { QuarkIdAgentService } from './services/quarkIdAgentService';
+import { Agent } from '@quarkid/agent';
+import { BsvWalletKMS } from '@quarkid/kms-core';
+import { ES256kVCSuite } from '@quarkid/kms-suite-vc-es256k';
 
-const agentService = new QuarkIdAgentService(config);
-await agentService.initialize();
+// Initialize BSV-compatible KMS
+const bsvKms = new BsvWalletKMS(walletClient);
 
-// Create DID using BSV keys
-const did = await agentService.createDID({
-    services: [/* your services */]
+// Create agent with BSV KMS
+const agent = new Agent({
+  kms: bsvKms,
+  // ... other configurations
+});
+
+// Use ES256k VC suite
+const vcSuite = new ES256kVCSuite();
+vcSuite.setKMS(bsvKms);
+```
+
+### VC Signing
+
+```typescript
+// Create credential
+const credential = {
+  '@context': ['https://www.w3.org/2018/credentials/v1'],
+  id: 'urn:uuid:123',
+  type: ['VerifiableCredential', 'PrescriptionCredential'],
+  issuer: 'did:bsv:tm_did:abc123',
+  credentialSubject: {
+    id: 'did:bsv:tm_did:def456',
+    prescription: { medication: 'Aspirin' }
+  }
+};
+
+// Sign with ES256k
+const signedVC = await agent.vc.signVC({
+  credential,
+  did: DID.from('did:bsv:tm_did:abc123'),
+  purpose: 'assertionMethod'
 });
 ```
 
-### Signing Verifiable Credentials
-
-```typescript
-// The agent automatically uses ES256k keys for BSV compatibility
-const signedVC = await agentService.signVC({
-    credential: verifiableCredential,
-    did: issuerDID
-});
-```
-
-## Key Benefits
+## Benefits
 
 1. **BSV Compatibility**: Full integration with Bitcoin SV blockchain
-2. **ES256k Support**: Native support for secp256k1 keys used in BSV
-3. **Wallet Integration**: Seamless integration with BSV wallets
-4. **Backward Compatibility**: Maintains compatibility with existing QuarkID implementations
-5. **Overlay Support**: Integration with BSV overlay for DID operations
+2. **Standards Compliance**: Maintains W3C DID and VC standards
+3. **Backward Compatibility**: Supports existing BBS+ credentials
+4. **Performance**: ES256k signing is faster than BBS+
+5. **Interoperability**: Works with existing QuarkID ecosystem
 
-## Technical Details
+## Migration Notes
 
-### Key Management
-
-- Uses `@bsv/sdk` for ES256k key generation
-- Implements QuarkID's `IKMS` interface
-- Stores keys in a secure in-memory key store
-- Supports key import/export operations
-
-### Cryptographic Operations
-
-- ES256k (secp256k1) signature generation and verification
-- JWK (JSON Web Key) format support
-- BSV-compatible key derivation [BRC42](https://bsv.brc.dev/key-derivation/0042)
-
-### DID Operations
-
-- BSV overlay integration for DID registration
-- BSV-compatible DID resolution
-- ES256k verification method support
-
-## Troubleshooting
-
-### Common Issues
-
-1. **KMS Keys Not Found**: Ensure `setup-env` has been run to generate keys
-2. **Platform Funding**: Use `npm run fund-platform` to fund the platform address
-3. **Overlay Connection**: Verify overlay service is running on port 8080
-
-### Debug Logging
-
-The BSV extensions include extensive debug logging. Check console output for:
-
-- Key creation and storage status
-- KMS replacement confirmation
-- DID creation and resolution details
-
-## Contributing
-
-When modifying BSV extensions:
-
-1. Maintain compatibility with QuarkID interfaces
-2. Add comprehensive logging for debugging
-3. Update this documentation
-4. Test with both ES256k and BBS+ keys
-
----
-
-**Note**: These extensions are specifically designed for Bitcoin SV integration and may not be compatible with other blockchain networks.
-
+- Existing BBS+ credentials continue to work
+- New credentials default to ES256k when available
+- Automatic fallback to BBS+ when ES256k keys are not available
+- No breaking changes to existing QuarkID APIs 
