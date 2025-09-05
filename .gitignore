@@ -1,19 +1,26 @@
-# Dependencies
-node_modules/
-.pnp.*
-.yarn/
+# Node / Yarn / NPM
+# =================
+# Standardize on yarn.lock only - ignore package-lock.json
+/package-lock.json
 
-# Build output (TypeScript compilation)
-/packages/*/dist
-**/dist/
-*.js
-*.js.map  
-*.d.ts
-# But keep legitimate config files
-!*.config.js
+# Node modules  
+/node_modules
+/packages/**/node_modules
+
+# Build artifacts
+# =================
+/packages/**/dist
+/packages/**/*.js
+/packages/**/*.js.map
+/packages/**/*.d.ts
+# Exclude root-level config files from the above rules
+!/*.js
+!/packages/*.js
+!jest.config.js
 !.eslintrc.js
 
-# Backup files
+# Development artifacts
+# =================
 *.backup
 *.bak
 
@@ -24,12 +31,11 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# OS generated files
+# IDE & OS
+# =================
 .DS_Store
 .AppleDouble
 .LSOverride
-
-# Editor directories and files
 .vscode/
 .idea/
 *.swp
@@ -45,6 +51,6 @@ yarn-error.log*
 .env.production
 .env.staging
 
-# AI files
+#AI files
 CLAUDE.md
 .claude/
