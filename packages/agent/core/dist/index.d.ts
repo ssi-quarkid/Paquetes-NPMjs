@@ -1,4 +1,4 @@
-export { VerifiableCredential } from "@extrimian/vc-core";
+export { VerifiableCredential } from "@quarkid/vc-core";
 export { Agent } from "./agent";
 export { DataShareBehavior } from "./data-share-behaviours/data-share-behavior";
 export { IdentityDataShareBehavior, IdentityExportParams, IdentityExportResult } from "./data-share-behaviours/identity-data-share-behavior";
@@ -16,10 +16,11 @@ export { WebsocketTransport } from "./models/transports/websocket-transport";
 export { IVCStorage } from "./models/vc-storage";
 export { IAgentPlugin, IAgentPluginMessage, IAgentPluginResponse } from "./plugins/iplugin";
 export { CredentialFlow } from "./vc/models/credentia-flow";
+export { IStatusListAgentPlugin, IStatusListPluginMessage } from "./plugins/istatus-list-plugin";
 export { OpenIDProtocol } from "./vc/protocols/openid-protocol";
 export { CredentialRequestedEventArg, VCMessageType, VCProtocol, VCProtocolResponse } from "./vc/protocols/vc-protocol";
 export { WACICredentialOfferRejected, WACICredentialOfferResult, WACICredentialOfferSucceded, WACICredentialOfferWaitForResponse, WACIProtocol } from "./vc/protocols/waci-protocol";
 export { VerifiableCredentialWithInfo, SelectiveDisclosure } from "./vc/protocols/waci-protocol";
 export { ConnectableTransport } from "./models/transports/connectable-transport";
 export { CredentialManifestStyles, InputDescriptor, WACIMessage } from "@extrimian/waci";
-export { Issuer } from "@extrimian/vc-core";
+export { Issuer } from "@quarkid/vc-core";

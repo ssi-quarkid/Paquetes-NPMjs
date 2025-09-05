@@ -1,5 +1,5 @@
-import { DIDDocumentUtils } from '@extrimian/did-core';
-import { IPackedDIDCommMessage } from '@extrimian/kms-core';
+import { DIDDocumentUtils } from '@quarkid/did-core';
+import { IPackedDIDCommMessage } from '@quarkid/kms-core';
 import { Socket as ServerSocket } from 'socket.io';
 import { Socket as ClientSocket } from 'socket.io-client';
 import { Agent } from '../../agent';

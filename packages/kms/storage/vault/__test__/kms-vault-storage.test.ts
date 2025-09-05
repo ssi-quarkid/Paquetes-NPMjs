@@ -1,6 +1,6 @@
 import { KMSVaultStorage } from "../src/services/kms-vault-storage"
-import { BaseConverter, Base } from "@extrimian/kms-core";
-import { LANG, Suite } from "@extrimian/kms-core";
+import { BaseConverter, Base } from "@quarkid/kms-core";
+import { LANG, Suite } from "@quarkid/kms-core";
 
 const roleId = "a237ad8e-cbdc-bd21-be0d-72721955d5b4"
 const secretId = "df3e3579-0e90-e388-2cf7-d1a3d12db38d"

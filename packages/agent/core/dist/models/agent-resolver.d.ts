@@ -1,4 +1,4 @@
-import { DIDDocument } from "@extrimian/did-core";
+import { DIDDocument } from "@quarkid/did-core";
 import { DIDModenaResolver, DIDUniversalResolver, ModenaResponse } from "@extrimian/did-resolver";
 import { DID } from "./did";
 export interface IAgentResolver {

@@ -1,4 +1,4 @@
-import { Issuer, UnsignedCredential, VerifiableCredential } from "@extrimian/vc-core";
+import { Issuer, UnsignedCredential, VerifiableCredential } from "@quarkid/vc-core";
 import { ClaimFormat, CredentialManifestStyles, DisplayMappingObject, GoalCode, InputDescriptor, OutputDescriptor, PresentationDefinition, PresentationDefinitionFrame, WACIMessage } from "@extrimian/waci";
 import { Agent } from "../../agent";
 import { IStorage } from "../../models/agent-storage";

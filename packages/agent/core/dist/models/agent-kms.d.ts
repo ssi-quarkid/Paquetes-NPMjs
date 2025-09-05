@@ -1,4 +1,4 @@
-import { IJWK, IKMS } from "@extrimian/kms-core";
+import { IJWK, IKMS } from "@quarkid/kms-core";
 import { AgentIdentity } from "./agent-identity";
 import { IAgentResolver } from "./agent-resolver";
 export declare class AgentKMS {

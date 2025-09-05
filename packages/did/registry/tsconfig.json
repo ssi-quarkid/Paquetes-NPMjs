@@ -2,7 +2,8 @@
   "compilerOptions": {
     "target": "es5",
     "lib": [
-      "es6"
+      "es6",
+      "dom"
     ],
     "types": [
       "reflect-metadata",
@@ -16,7 +17,7 @@
     "sourceMap": true,
     "declaration": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "skipLibCheck": true
   },
-
 }

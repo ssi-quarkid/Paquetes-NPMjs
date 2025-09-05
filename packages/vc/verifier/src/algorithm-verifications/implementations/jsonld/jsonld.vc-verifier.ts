@@ -1,6 +1,6 @@
 import { VCVerifier } from "../../vc-verifier";
-import { AuthenticationPurpose, DIDDocument, Purpose, VerificationMethod } from "@extrimian/did-core";
-import { VerifiableCredential } from "@extrimian/vc-core";
+import { AuthenticationPurpose, DIDDocument, Purpose, VerificationMethod } from "@quarkid/did-core";
+import { VerifiableCredential } from "@quarkid/vc-core";
 import { isArray } from "util";
 import { AuthenticationPurposeChallengeRequired, VerificationMethodNotFound } from "../../../errors/error-code";
 const jsonld = require("jsonld-signatures");

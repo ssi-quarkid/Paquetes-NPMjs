@@ -1,5 +1,5 @@
 import { readFileSync, writeFileSync, existsSync } from 'fs';
-import { AgentSecureStorage } from '@extrimian/agent';
+import { AgentSecureStorage } from '@quarkid/agent';
 
 export class FileSystemAgentSecureStorage implements AgentSecureStorage {
     public readonly filepath: string;

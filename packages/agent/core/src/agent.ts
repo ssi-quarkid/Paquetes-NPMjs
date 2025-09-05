@@ -18,7 +18,7 @@ import { VC } from "./vc/vc";
 import { LiteEvent } from "./utils/lite-event";
 import { IStatusListAgentPlugin } from "./plugins/istatus-list-plugin";
 import { AgentPluginBase } from "./plugins/ivc-interceptor-plugin";
-import { VerifiableCredential } from "@extrimian/vc-core";
+import { VerifiableCredential } from "@quarkid/vc-core";
 
 export class Agent {
     private _messaging: Messaging;
@@ -95,13 +95,6 @@ export class Agent {
         this.pluginDispatcher = new PluginDispatcher(params.agentPlugins.filter(x => (<IAgentPlugin>x).canHandle) as IAgentPlugin[]);
         this.vcProtocols = params.vcProtocols;
 
-        this.kms = new KMSClient({
-            lang: params.mnemonicLang || LANG.en,
-            storage: this.agentSecureStorage,
-            didResolver: (did: string) => this.resolver.resolve(DID.from(did)),
-            mobile: false,
-        });
-
         if (!params.didDocumentResolver) {
             throw new Error("didDocumentResolver is required. You can define a custom resolver that extends AgentDocumentResolver interface or set an universal resolver endpoint URL.");
         }
@@ -110,6 +103,16 @@ export class Agent {
             throw new Error("didDocumentRegistry is required. You can define a custom registry that extends AgentDocumentRegistry interface or set a modena endpoint URL.");
         }
 
+        this.resolver = params.didDocumentResolver as IAgentResolver;
+        this.registry = params.didDocumentRegistry as IAgentRegistry;
+
+        this.kms = new KMSClient({
+            lang: params.mnemonicLang || LANG.en,
+            storage: this.agentSecureStorage,
+            didResolver: (did: string) => this.resolver.resolve(DID.from(did)),
+            mobile: false,
+        }) as unknown as IKMS;
+
         this.identity = new AgentIdentity({
             agentStorage: this.agentStorage,
             kms: this.kms,
@@ -117,8 +120,6 @@ export class Agent {
             resolver: this.resolver,
         });
 
-        this.resolver = params.didDocumentResolver as IAgentResolver;
-        this.registry = params.didDocumentRegistry as IAgentRegistry;
         this.registry.initialize({ kms: this.kms as any });
 
         this.agentKMS = new AgentKMS({

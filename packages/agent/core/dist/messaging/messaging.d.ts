@@ -1,5 +1,5 @@
-import { DIDCommMessage } from "@extrimian/did-core";
-import { DIDCommMessagePacking, DIDCommPackedMessage, IDIDCommMessage, IKMS } from "@extrimian/kms-core";
+import { DIDCommMessage } from "@quarkid/did-core";
+import { DIDCommMessagePacking, DIDCommPackedMessage, IDIDCommMessage, IKMS } from "@quarkid/kms-core";
 import { AgentIdentity } from "../models/agent-identity";
 import { IAgentRegistry } from "../models/agent-registry";
 import { IAgentResolver } from "../models/agent-resolver";

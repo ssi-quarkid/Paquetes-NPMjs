@@ -1,7 +1,7 @@
-import { IJWK, LANG, Suite } from "@extrimian/kms-core";
-import { KMSClient } from "@extrimian/kms-client";
+import { IJWK, LANG, Suite } from "@quarkid/kms-core";
+import { KMSClient } from "@quarkid/kms-client";
 import { Did } from "../../registry/src/index";
-import { AssertionMethodPurpose, DIDDocument } from "@extrimian/did-core";
+import { AssertionMethodPurpose, DIDDocument } from "@quarkid/did-core";
 import { DIDUniversalResolver } from "../src/services/universal-resolver";
 
 jest.setTimeout(5000000);

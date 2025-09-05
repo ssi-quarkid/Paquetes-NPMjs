@@ -1,0 +1,35 @@
+{
+  "name": "@quarkid/kms-suite-vc-es256k",
+  "version": "1.0.0",
+  "description": "ES256k Verifiable Credential Suite for QuarkID KMS",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "lint": "eslint src/**/*.ts"
+  },
+  "dependencies": {
+    "@quarkid/kms-core": "workspace:*",
+    "@quarkid/did-core": "workspace:*",
+    "@bsv/sdk": "^1.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "peerDependencies": {
+    "@quarkid/kms-core": "workspace:*",
+    "@quarkid/did-core": "workspace:*"
+  },
+  "keywords": [
+    "quarkid",
+    "kms",
+    "vc",
+    "es256k",
+    "verifiable-credentials",
+    "bsv"
+  ],
+  "author": "QuarkID Team",
+  "license": "MIT"
+} 

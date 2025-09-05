@@ -1,4 +1,4 @@
-// import { VerifiableCredential } from "@extrimian/vc-core";
+// import { VerifiableCredential } from "@quarkid/vc-core";
 import { AgentModenaUniversalRegistry, AgentModenaUniversalResolver, DWNTransport, Agent, WACIProtocol, AgentModenaRegistry, AgentModenaResolver, CredentialFlow } from "@quarkid/agent";
 import { MemoryStorage } from "./mock/memory-storage";
 import { FileSystemStorage } from "./mock/filesystme-storage";
