@@ -2,7 +2,7 @@ import { CredentialDisplay, IssuerData, VerifiableCredentialWithInfo } from "@qu
 import { AssertionMethodPurpose, AuthenticationPurpose, Purpose, VerificationMethodJwk } from "@quarkid/did-core";
 import { Base, BaseConverter, IJWK, IKMS, Suite, getTypeBySuite } from "@quarkid/kms-core";
 import { VerifiableCredential } from "@quarkid/vc-core";
-import { VCSuiteError, VCVerifierService } from "@extrimian/vc-verifier";
+import { VCSuiteError, VCVerifierService } from "@quarkid/vc-verifier";
 import { CredentialManifestStyles, PresentationDefinitionFrame } from "@extrimian/waci";
 import { encode, decode } from "base-64";
 import { VCProtocolNotFoundError } from "../exceptions/vc-protocol-not-found";

@@ -1,9 +1,41 @@
-node_modules
-package-lock.json
-yarn.lock
+# Dependencies
+node_modules/
+.pnp.*
+.yarn/
 
+# Build output (TypeScript compilation)
+/packages/*/dist
+**/dist/
+*.js
+*.js.map  
+*.d.ts
+# But keep legitimate config files
+!*.config.js
+!.eslintrc.js
+
+# Backup files
+*.backup
+*.bak
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS generated files
 .DS_Store
+.AppleDouble
+.LSOverride
 
+# Editor directories and files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environment files
 .env
 .env.local
 .env.development.local
@@ -13,5 +45,6 @@ yarn.lock
 .env.production
 .env.staging
 
+# AI files
 CLAUDE.md
 .claude/

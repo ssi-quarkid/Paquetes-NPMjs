@@ -271,6 +271,11 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
+"@bsv/sdk@^1.0.24":
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/@bsv/sdk/-/sdk-1.7.1.tgz#4345a2f47c6a7b3d3426749bd55e8079f75884cc"
+  integrity sha512-lsXVo4g0v0uJo3nhvGeVbbDky/CJh6jIFeo2rSW0XIX0tl1vCF5hGd39lmUrGSqeQtPyy9SBwLskEXPMUYdvvg==
+
 "@bsv/sdk@^1.6.0":
   version "1.6.6"
   resolved "https://registry.yarnpkg.com/@bsv/sdk/-/sdk-1.6.6.tgz#f7ba24b4981576e0ee3b3671b02feece2db25764"
@@ -872,7 +877,7 @@
     ts-jest "^28.0.1"
     uri-js "4.4.0"
 
-"@extrimian/vc-core@1.0.7", "@extrimian/vc-core@^1.0.7":
+"@extrimian/vc-core@1.0.7":
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/@extrimian/vc-core/-/vc-core-1.0.7.tgz#556d8968e4ffa949ddb83053f9542a1524ceaf2e"
   integrity sha512-5UrrVRf5/+e+P1kQoSipV4D3sOYa91tuqEKIynkkdL5QZvJPQP31RCZkY9YWelybyVcuCBmMc2//l9EjP0gLqA==
@@ -887,21 +892,6 @@
   dependencies:
     "@extrimian/did-core" "1.0.7"
     jsonld "^5.2.0"
-
-"@extrimian/vc-verifier@1.2.0-0":
-  version "1.2.0-0"
-  resolved "https://registry.yarnpkg.com/@extrimian/vc-verifier/-/vc-verifier-1.2.0-0.tgz#0ce1a7b1b2e079c8890622d95d813f2cc2416729"
-  integrity sha512-2GQHks2SLFaIx4tSp5FzwW8auWblHiWd4ctt6MyiN361mYuSGmeLVtMamoLQlE4s1qAvFB935SaGBZRwJG6Cgw==
-  dependencies:
-    "@extrimian/did-core" "^1.0.7"
-    "@extrimian/kms-core" "^1.1.0"
-    "@extrimian/vc-core" "^1.0.7"
-    "@mattrglobal/jsonld-signatures-bbs" "1.1.0"
-    axios "^0.27.2"
-    jsonld "3.1.0"
-    jsonld-document-loader "1.2.1"
-    jsonld-signatures "5.0.1"
-    jwk-to-pem "^2.0.5"
 
 "@extrimian/waci@~3.0.0":
   version "3.0.0"

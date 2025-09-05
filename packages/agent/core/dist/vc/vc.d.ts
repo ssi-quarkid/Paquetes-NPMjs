@@ -2,7 +2,7 @@ import { CredentialDisplay, IssuerData, VerifiableCredentialWithInfo } from "@qu
 import { Purpose } from "@quarkid/did-core";
 import { IJWK, IKMS } from "@quarkid/kms-core";
 import { VerifiableCredential } from "@quarkid/vc-core";
-import { VCSuiteError } from "@extrimian/vc-verifier";
+import { VCSuiteError } from "@quarkid/vc-verifier";
 import { CredentialManifestStyles, PresentationDefinitionFrame } from "@extrimian/waci";
 import { Messaging } from "../messaging/messaging";
 import { AgentIdentity } from "../models/agent-identity";

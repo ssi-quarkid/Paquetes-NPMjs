@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.VC = void 0;
 const did_core_1 = require("@quarkid/did-core");
 const kms_core_1 = require("@quarkid/kms-core");
-const vc_verifier_1 = require("@extrimian/vc-verifier");
+const vc_verifier_1 = require("@quarkid/vc-verifier");
 const base_64_1 = require("base-64");
 const vc_protocol_not_found_1 = require("../exceptions/vc-protocol-not-found");
 const agent_pbk_1 = require("../models/agent-pbk");

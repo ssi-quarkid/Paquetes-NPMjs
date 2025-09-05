@@ -5,4 +5,5 @@ export interface Proof {
     created: string;
     proofPurpose: Purpose;
     verificationMethod: string;
+    jws?: string; // ES256k signature in DER format (hex)
 }
