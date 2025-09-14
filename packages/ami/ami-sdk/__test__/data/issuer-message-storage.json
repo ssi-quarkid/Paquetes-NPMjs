@@ -1,0 +1,1 @@
+{"91efbd43-fd78-4625-9219-a75a8d193d27":{"id":"91efbd43-fd78-4625-9219-a75a8d193d27","thid":"91efbd43-fd78-4625-9219-a75a8d193d27","type":"extrimian/messaging/standard","from":"did:test:issuer","to":["did:test:holder"],"body":{"contentType":"text/plain","data":"Hello holder! 0"},"attachments":null}}

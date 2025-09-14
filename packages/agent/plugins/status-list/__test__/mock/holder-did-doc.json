@@ -1,0 +1,53 @@
+{
+    "@context": [
+        "https://www.w3.org/ns/did/v1",
+        "https://w3id.org/security/suites/jws-2020/v1",
+        {
+            "@vocab": "https://www.w3.org/ns/did#"
+        }
+    ],
+    "id": "did:cadena:lacnet:EiA_2BV2IAhttk0sGe1yJuR_JinU968UdREJl6Rg3Yzy1g",
+    "verificationMethod": [
+        {
+            "id": "#didcomm",
+            "controller": "did:cadena:lacnet:EiA_2BV2IAhttk0sGe1yJuR_JinU968UdREJl6Rg3Yzy1g",
+            "type": "X25519KeyAgreementKey2019",
+            "publicKeyJwk": {
+                "kty": "EC",
+                "crv": "Ed25519",
+                "x": "YEOVMgvcpD_eEy-6BIuXaQ",
+                "y": "cRgIUVk4-IDh-HS1XhHvVQ"
+            }
+        },
+        {
+            "id": "#vc-bbsbls",
+            "controller": "did:cadena:lacnet:EiA_2BV2IAhttk0sGe1yJuR_JinU968UdREJl6Rg3Yzy1g",
+            "type": "Bls12381G1Key2020",
+            "publicKeyJwk": {
+                "kty": "EC",
+                "crv": "Bls12381G2Key2020",
+                "x": "iW4tB0aQy6NBbBZSf62kiIM7pXM9uTJzurp06dIdYQSwtnkxsfq_rWMVUN4zeUBs",
+                "y": "F0_8benk3nn0mfgM5rXWEjcSIJlfevQH1tXK6N36E6NyV2rB5HJPSGoZJIAgvVhC"
+            }
+        },
+        {
+            "id": "#rsa",
+            "controller": "did:cadena:lacnet:EiA_2BV2IAhttk0sGe1yJuR_JinU968UdREJl6Rg3Yzy1g",
+            "type": "RsaSignature2018",
+            "publicKeyJwk": {
+                "kty": "RSA",
+                "n": "v0LjOxLxZlF0K2RPGDGu_ltYyq2MJYsphkHwkKssik0ion_P7P7UOtSPpNYB2QM3exQQp2LAPRicmbd6QfOa0Ww496z9qype0fRJrtczbhNgllymAg0aCXtd17CMzlCvWr5Gv_MYzeeHWBAGuRRb8zawFbU2Gd-wjocHLMR9kx_AqM7lUwQCI3btRsR2MPZWKP04eHSx8zVNbYcohkBCwm1XRyYVVdDhRv7feRazKmaW6Bf6gUP7zR053Axq8OJNrKcP9Frlj_diVlNNEW5flk4gZFPzTkGqsPtislBnqDyOQnjdhsG6ntL_qWqFGn-zH_RupIVO34MBQKq_3wjYMw",
+                "e": "AQAB"
+            }
+        }
+    ],
+    "keyAgreement": [
+        "#didcomm"
+    ],
+    "assertionMethod": [
+        "#vc-bbsbls"
+    ],
+    "authentication": [
+        "#rsa"
+    ]
+}

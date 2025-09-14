@@ -1,0 +1,52 @@
+import { AgentSecureStorage } from "@quarkid/agent";
+import { IAgentStorage } from "@quarkid/agent";
+import { IStorage } from "@quarkid/ami-sdk";
+
+export class MemoryStorage implements IStorage {
+    mapper: Map<string, any> = new Map();
+
+    async add(key: string, value: any): Promise<void> {
+        this.mapper.set(key, value);
+    }
+
+    async get<T>(key: string): Promise<T> {
+        return this.mapper.get(key);
+    }
+
+    async update<T>(key: string, value: T): Promise<void> {
+        this.mapper.set(key, value);
+    }
+
+    async getAll<T>(): Promise<Map<string, T>> {
+        return this.mapper;
+    }
+
+    async remove(key: string): Promise<void> {
+        this.mapper.delete(key);
+    }
+}
+
+export class MemorySecureStorage implements AgentSecureStorage {
+    mapper: Map<string, any> = new Map();
+
+    async add(key: string, value: any): Promise<void> {
+        this.mapper.set(key, value);
+    }
+
+    async get<T>(key: string): Promise<T> {
+        return this.mapper.get(key);
+    }
+
+    async getAll(): Promise<Map<string, any>> {
+        return this.mapper;
+    }
+
+    async update<T>(key: string, value: T): Promise<void> {
+        this.mapper.set(key, value);
+    }
+
+
+    async remove(key: string): Promise<void> {
+        this.mapper.delete(key);
+    }
+}

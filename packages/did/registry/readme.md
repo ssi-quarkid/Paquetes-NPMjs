@@ -6,10 +6,10 @@ To create a new DID, you need to provide some public keys. You can use Extrimian
 The next example shows how to create a new DID using Extrimian Registry and Extrimian KMS.
 
 ```
-import { KMSClient } from "@extrimian/kms-client";
-import { Did } from "@extrimian/did-registry";
-import { AssertionMethodPurpuse, KeyAgreementPurpose } from "@extrimian/did-core";
-import { LANG, Suite } from "@extrimian/kms-core";
+import { KMSClient } from "@quarkid/kms-client";
+import { Did } from "@quarkid/did-registry";
+import { AssertionMethodPurpuse, KeyAgreementPurpose } from "@quarkid/did-core";
+import { LANG, Suite } from "@quarkid/kms-core";
 
 const kms = new KMSClient({
     lang: LANG.en,
@@ -45,7 +45,7 @@ const longDID = await didService.createDID({
 KMS applies dependency inversion concepts so it requires send a SecureStorage by its constructor.
 
 To learn more about the Extrimian KMS read the documentation:
-@extrimian/kms-client
+@quarkid/kms-client
 
 createDID request returns a CreateDIDResponse
 

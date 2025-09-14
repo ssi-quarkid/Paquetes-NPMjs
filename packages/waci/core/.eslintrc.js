@@ -10,7 +10,7 @@ module.exports = {
     node: true,
     jest: true,
   },
-  ignorePatterns: ['.eslintrc.js', 'node_modules', 'packages/@extrimian'],
+  ignorePatterns: ['.eslintrc.js', 'node_modules', 'packages/@quarkid'],
   rules: {
     'unused-imports/no-unused-imports': 'error',
     '@typescript-eslint/interface-name-prefix': 'off',

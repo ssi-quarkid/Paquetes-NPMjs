@@ -1,6 +1,6 @@
 {
     "name": "@quarkid/kms-storage-vault",
-    "version": "1.0.0",
+    "version": "1.6.1",
     "description": "",
     "main": "dist/src/index.js",
     "typings": "dist/src/index.d.ts",
@@ -10,7 +10,7 @@
         "test": "jest"
     },
     "keywords": [],
-    "author": "Quarkid",
+    "author": "Extrimian",
     "license": "Apache2.0",
     "devDependencies": {
         "@types/jest": "^27.5.0",
@@ -21,7 +21,7 @@
         "typescript": "^4.5.4"
     },
     "dependencies": {
-        "@extrimian/kms-core": "^1.2.0",
+        "@quarkid/kms-core": "^1.2.0",
         "hashi-vault-js": "0.4.11",
         "ts-jest": "^28.0.1"
     }

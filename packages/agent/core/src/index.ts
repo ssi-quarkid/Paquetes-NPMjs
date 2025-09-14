@@ -1,4 +1,4 @@
-export { VerifiableCredential } from "@extrimian/vc-core";
+export { VerifiableCredential } from "@quarkid/vc-core";
 export { Agent } from "./agent";
 export { DataShareBehavior } from "./data-share-behaviours/data-share-behavior";
 export { IdentityDataShareBehavior, IdentityExportParams, IdentityExportResult } from "./data-share-behaviours/identity-data-share-behavior";
@@ -8,18 +8,24 @@ export {
   AgentModenaResolver,
   AgentModenaUniversalResolver, IAgentResolver
 } from "./models/agent-resolver";
+
+export {
+  AgentModenaUniversalResolverCached,
+  AgentModenaResolverCached
+} from "./models/agent-resolver-cache";
 export { AgentSecureStorage } from "./models/agent-secure-storage";
-export { IAgentStorage } from "./models/agent-storage";
+export { IAgentStorage, IStorage } from "./models/agent-storage";
 export { DID } from "./models/did";
 export { DWNTransport } from "./models/transports/dwn-transport";
+export { DWNAmiTransport } from "./models/transports/ami-transport";
 export { ITransport } from "./models/transports/transport";
 export { WebsocketClientTransport } from "./models/transports/websocket-client-transport";
 export { WebsocketServerTransport } from "./models/transports/websocket-server-transport";
 export { WebsocketTransport } from "./models/transports/websocket-transport";
 export { IVCStorage } from "./models/vc-storage";
 export { IAgentPlugin, IAgentPluginMessage, IAgentPluginResponse } from "./plugins/iplugin";
-export { CredentialFlow } from "./vc/models/credentia-flow";
 export { IStatusListAgentPlugin, IStatusListPluginMessage } from "./plugins/istatus-list-plugin";
+export { CredentialFlow } from "./vc/models/credentia-flow";
 export {
   OpenIDProtocol
 } from "./vc/protocols/openid-protocol";
@@ -36,5 +42,5 @@ export {
 export { VerifiableCredentialWithInfo, SelectiveDisclosure } from "./vc/protocols/waci-protocol";
 export { ConnectableTransport } from "./models/transports/connectable-transport";
 
-export { CredentialManifestStyles, InputDescriptor, WACIMessage } from "@extrimian/waci";
-export { Issuer } from "@extrimian/vc-core";
+export { CredentialManifestStyles, InputDescriptor, WACIMessage } from "@quarkid/waci";
+export { Issuer } from "@quarkid/vc-core";

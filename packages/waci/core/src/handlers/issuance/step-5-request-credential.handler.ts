@@ -108,8 +108,7 @@ export class RequestCredentialHandler implements WACIMessageHandler {
           const presentation = messageToProcess.attachments[0].data.json;
           const verifyPresentationResult = await callbacks[
             Actor.Issuer
-          ].verifyPresentation({ presentation, challenge: challengeToCheck });
-
+          ].verifyPresentation({ presentation, challenge: challengeToCheck, message: messageToProcess, holderDid: holderDID });
           if (!verifyPresentationResult.result) {
             return {
               responseType: WACIMessageResponseType.ReplyThread,

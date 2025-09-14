@@ -1,5 +1,5 @@
-import { DIDCommMessage, DIDDocumentUtils, VerificationMethodJwk, VerificationMethodTypes } from "@extrimian/did-core";
-import { Base, BaseConverter, DIDCommMessagePacking, DIDCommPackedMessage, IDIDCommMessage, IJWK, IKMS, Suite } from "@extrimian/kms-core";
+import { DIDCommMessage, DIDDocumentUtils, VerificationMethodJwk, VerificationMethodTypes } from "@quarkid/did-core";
+import { Base, BaseConverter, DIDCommMessagePacking, DIDCommPackedMessage, IDIDCommMessage, IJWK, IKMS, Suite } from "@quarkid/kms-core";
 import { AgentIdentity } from "../models/agent-identity";
 import { IAgentRegistry } from "../models/agent-registry";
 import { IAgentResolver } from "../models/agent-resolver";

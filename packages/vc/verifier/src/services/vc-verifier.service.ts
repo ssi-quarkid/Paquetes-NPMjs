@@ -1,8 +1,8 @@
-import { DIDDocument, Purpose } from "@extrimian/did-core";
+import { DIDDocument, Purpose } from "@quarkid/did-core";
 import { verifiers } from "../decorators/inject-verifier-decorator";
-import { VerifiableCredential } from "@extrimian/vc-core";
+import { VerifiableCredential } from "@quarkid/vc-core";
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { CredentialStatusType } from "@extrimian/vc-core";
+import { CredentialStatusType } from "@quarkid/vc-core";
 import {
   CredentialStatusServiceError,
   DIDDocumentResolutionError,

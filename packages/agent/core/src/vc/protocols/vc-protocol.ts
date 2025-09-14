@@ -1,6 +1,6 @@
 import { IssuerData, VerifiableCredentialWithInfo } from "@quarkid/agent/src/vc/protocols/waci-protocol";
-import { VerifiableCredential } from "@extrimian/vc-core";
-import { WACIMessage } from "@extrimian/waci";
+import { VerifiableCredential } from "@quarkid/vc-core";
+import { WACIMessage } from "@quarkid/waci";
 import { Agent } from "../../agent";
 import { DID } from "../../models/did";
 import { LiteEvent } from "../../utils/lite-event";
@@ -31,7 +31,7 @@ export abstract class VCProtocol<TProtocolMessage = any> {
     protected readonly onAckCompleted = new LiteEvent<{ role: ActorRole, status: string, messageId: string, thid: string, invitationId?: string }>;
     public get ackCompleted() { return this.onAckCompleted.expose(); }
 
-    protected readonly onProblemReport = new LiteEvent<{ did: DID, code: string, invitationId: string, messageId: string }>;
+    protected readonly onProblemReport = new LiteEvent<{ did: DID, code: string, codeMessage: string, invitationId: string, messageId: string }>;
     public get problemReport() { return this.onProblemReport.expose(); }
 
     abstract processMessage(message: TProtocolMessage, context?: any, did?: DID): Promise<VCProtocolResponse | void>;

@@ -15,6 +15,7 @@ import {
 } from '../../types';
 import { createUUID } from '../../utils';
 import { callbacks } from '../../callbacks';
+import { ProblemReportMessage } from '../../types/problem-report';
 
 export type OfferCredentialMessageParamsBase =
   | OfferCredentialMessageParams
@@ -86,7 +87,22 @@ export class ProposeCredentialHandler implements WACIMessageHandler {
     } else if (
       credentialManifestParams.result == OfferCredentialMessageResult.Failed
     ) {
-      //TODO Return waci fail message if exist
+      const problemReport = new ProblemReportMessage();
+
+      return {
+        responseType: WACIMessageResponseType.ReplyThread,
+        message: {
+          type: WACIMessageType.ProblemReport,
+          id: createUUID(),
+          thid: message.id,
+          from: issuerDID,
+          to: [holderDID],
+          body: problemReport.presentProofMessage(
+            "credential_issuance_error",
+            credentialManifestParams.errorMessage,
+          ),
+        },
+      };
     }
 
     //If credentialManifestParams.result == OfferCredentialMessageResult.AsyncProcess do nothing
@@ -104,7 +120,7 @@ export class ProposeCredentialHandler implements WACIMessageHandler {
       }
       : undefined;
 
-      
+
     return [
       {
         id: createUUID(),

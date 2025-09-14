@@ -1,4 +1,4 @@
-import { Purpose } from "@extrimian/did-core";
+import { Purpose } from "@quarkid/did-core";
 
 export interface Proof {
     type: string;

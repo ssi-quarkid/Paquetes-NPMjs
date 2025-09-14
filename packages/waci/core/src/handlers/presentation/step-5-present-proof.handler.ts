@@ -52,7 +52,7 @@ export class PresentProofHandler implements WACIMessageHandler {
 
     const verifyPresentationResult = await callbacks[
       Actor.Verifier
-    ].verifyPresentation({ presentation, challenge: challengeToCheck });
+    ].verifyPresentation({ presentation, challenge: challengeToCheck, message: messageToProcess, holderDid: holderDID });
 
     if (!verifyPresentationResult.result) {
       //TO DO error codes from vc suite

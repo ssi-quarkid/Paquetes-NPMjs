@@ -1,8 +1,8 @@
-import { AssertionMethodPurpose } from "@extrimian/did-core";
-import { IES256kKeyPair, LANG, Suite } from "@extrimian/kms-core";
+import { AssertionMethodPurpose } from "@quarkid/did-core";
+import { IES256kKeyPair, LANG, Suite } from "@quarkid/kms-core";
 import { KMSClient } from "../src/services/kms-client";
-import { BaseConverter, Base } from "@extrimian/kms-core";
-import { VCVerifierService } from "@extrimian/vc-verifier";
+import { BaseConverter, Base } from "@quarkid/kms-core";
+import { VCVerifierService } from "@quarkid/vc-verifier";
 
 const didDocument = require("./mock/did-document.json");
 const vc = require("./mock/vc.json");

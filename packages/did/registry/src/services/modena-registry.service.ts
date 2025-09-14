@@ -5,16 +5,16 @@ import {
     ModenaPublicKeyPurpose,
     ModenaRequest,
     ModenaSdkConfig,
-} from "@extrimian/modena-sdk";
-import { KMSClient } from "@extrimian/kms-client";
-import { IJWK, KMSStorage, LANG, Suite } from "@extrimian/kms-core";
-import { Service } from '@extrimian/did-core';
+} from "@quarkid/modena-sdk";
+import { KMSClient } from "@quarkid/kms-client";
+import { IJWK, KMSStorage, LANG, Suite } from "@quarkid/kms-core";
+import { Service } from '@quarkid/did-core';
 import fetch from "node-fetch";
 import { CreateDIDResponse } from "../models/create-did.response";
 import { PublishDIDResponse } from "../models/publish-did.response";
 import { IPublicKeys, ProcessResult, VerificationMethod } from "../models/interfaces";
 import { PublishDIDRequest } from "../models/publish-did-request";
-import { DIDDocumentMetadata } from "@extrimian/modena-sdk";
+import { DIDDocumentMetadata } from "@quarkid/modena-sdk";
 import { UpdateDIDRequest } from "../models/update-did-request";
 
 export abstract class ModenaRegistryBase<TPublishRequest extends PublishDIDRequest> {

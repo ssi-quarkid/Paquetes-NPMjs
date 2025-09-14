@@ -1,6 +1,6 @@
 {
 	"name": "@quarkid/kms-core",
-	"version": "1.0.0",
+	"version": "1.4.0-2",
 	"description": "",
 	"main": "dist/index.js",
 	"typings": "dist/index.d.ts",
@@ -10,7 +10,7 @@
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"keywords": [],
-	"author": "Quarkid",
+	"author": "Extrimian",
 	"license": "Apache-2.0",
 	"devDependencies": {
 		"@types/node": "^17.0.27",
@@ -20,8 +20,8 @@
 		"typescript": "^4.5.4"
 	},
 	"peerDependencies": {
-		"@extrimian/did-core": "x.x.x",
-		"@extrimian/vc-core": "x.x.x"
+		"@quarkid/did-core": "x.x.x",
+		"@quarkid/vc-core": "x.x.x"
 	},
 	"dependencies": {
 		"base64url": "^3.0.1",

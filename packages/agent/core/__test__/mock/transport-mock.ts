@@ -5,7 +5,7 @@ import { ILiteEvent, LiteEvent } from "../../src/utils/lite-event";
 const transportMessages = new Array<TransportSendRequest>();
 const messageArrived: LiteEvent<MessageArrivedEventArg> = new LiteEvent();
 
-export class TransportMock implements ITransport {
+export class MockTransport implements ITransport {
     agent: Agent;
 
     async dispose(): Promise<void> {

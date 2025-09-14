@@ -4,7 +4,7 @@ import {
   DIDDocumentUtils,
   Purpose,
   VerificationMethodJwk
-} from "@extrimian/did-core";
+} from "@quarkid/did-core";
 import {
   IES256kSuite,
   IVCSuite,
@@ -27,17 +27,17 @@ import {
   DIDCommMessagePacking,
   SelectiveDisclosureZKPSuite,
   DIDCommPackedMessage,
-} from "@extrimian/kms-core";
-import { VerifiableCredential } from "@extrimian/vc-core";
-import "@extrimian/kms-suite-didcomm";
-import "@extrimian/kms-suite-didcomm-v2";
-import "@extrimian/kms-suite-es256k";
-import "@extrimian/kms-suite-rsa-signature-2018";
-import { DIDCommSuite as DIDCommSuiteV1 } from "@extrimian/kms-suite-didcomm";
-import { DIDCommSuite } from "@extrimian/kms-suite-didcomm-v2";
-import { BbsBls2020Suite } from "@extrimian/kms-suite-bbsbls2020";
-import { RSASignature2018Suite } from "@extrimian/kms-suite-rsa-signature-2018";
-import { ES256kSuite } from "@extrimian/kms-suite-es256k";
+} from "@quarkid/kms-core";
+import { VerifiableCredential } from "@quarkid/vc-core";
+import "@quarkid/kms-suite-didcomm";
+import "@quarkid/kms-suite-didcomm-v2";
+import "@quarkid/kms-suite-es256k";
+import "@quarkid/kms-suite-rsa-signature-2018";
+import { DIDCommSuite as DIDCommSuiteV1 } from "@quarkid/kms-suite-didcomm";
+import { DIDCommSuite } from "@quarkid/kms-suite-didcomm-v2";
+import { BbsBls2020Suite } from "@quarkid/kms-suite-bbsbls2020";
+import { RSASignature2018Suite } from "@quarkid/kms-suite-rsa-signature-2018";
+import { ES256kSuite } from "@quarkid/kms-suite-es256k";
 
 export class KMSClient implements IKMS {
   suites: Map<Suite, new (...args: never[]) => any> = new Map();
@@ -56,7 +56,7 @@ export class KMSClient implements IKMS {
     this.suites.set(Suite.RsaSignature2018, RSASignature2018Suite)
 
     if (!config.mobile) {
-      import("@extrimian/kms-suite-bbsbls2020");
+      import("@quarkid/kms-suite-bbsbls2020");
       this.suites.set(Suite.Bbsbls2020, BbsBls2020Suite)
     }
     if (!config.didResolver)

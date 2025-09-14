@@ -1,0 +1,1 @@
+export { AMISDKPlugin } from "./plugin/ami-plugin"

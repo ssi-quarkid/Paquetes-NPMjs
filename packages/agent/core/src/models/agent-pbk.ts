@@ -1,4 +1,4 @@
-import { IJWK } from "@extrimian/kms-core";
+import { IJWK } from "@quarkid/kms-core";
 
 export class AgentPublicKey {
     name: string;

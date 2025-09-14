@@ -1,7 +1,7 @@
-import { VerificationMethod, VerificationMethodJwk, VerificationMethodPublicKey58 } from "@extrimian/did-core";
+import { VerificationMethod, VerificationMethodJwk, VerificationMethodPublicKey58 } from "@quarkid/did-core";
 import { JsonLDVCVerifier } from "./jsonld.vc-verifier";
 import { BbsBlsSignatureProof2020 } from "@mattrglobal/jsonld-signatures-bbs"
-import { Base, BaseConverter } from "@extrimian/kms-core";
+import { Base, BaseConverter } from "@quarkid/kms-core";
 import { InjectVerifier } from "../../../decorators/inject-verifier-decorator";
 
 ///Bbs2020VCVerifier Algorithm to verify Verifiable Credential. Use once instance for verification

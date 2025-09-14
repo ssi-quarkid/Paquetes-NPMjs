@@ -1,9 +1,9 @@
 import { CredentialDisplay, IssuerData, VerifiableCredentialWithInfo } from "@quarkid/agent/src/vc/protocols/waci-protocol";
-import { AssertionMethodPurpose, AuthenticationPurpose, Purpose, VerificationMethodJwk } from "@extrimian/did-core";
+import { AssertionMethodPurpose, AuthenticationPurpose, Purpose, VerificationMethodJwk } from "@quarkid/did-core";
 import { Base, BaseConverter, IJWK, IKMS, Suite, getTypeBySuite } from "@quarkid/kms-core";
-import { VerifiableCredential } from "@extrimian/vc-core";
-import { VCSuiteError, VCVerifierService } from "@extrimian/vc-verifier";
-import { CredentialManifestStyles, PresentationDefinitionFrame } from "@extrimian/waci";
+import { VerifiableCredential } from "@quarkid/vc-core";
+import { VCSuiteError, VCVerifierService } from "@quarkid/vc-verifier";
+import { CredentialManifestStyles, PresentationDefinitionFrame } from "@quarkid/waci";
 import { encode, decode } from "base-64";
 import { VCProtocolNotFoundError } from "../exceptions/vc-protocol-not-found";
 import { Messaging } from "../messaging/messaging";
@@ -31,8 +31,6 @@ export class VC {
     private vcStorage: IStorage;
     private vcProtocols: VCProtocol[];
 
-    private verificationRules: ((vc: VerifiableCredential) => Promise<{ result: boolean, rejectDetail?: { name: string, description: string, code: number } }>)[] = [];
-
     private readonly onCredentialArrived = new LiteEvent<{ credentials: VerifiableCredentialWithInfo[], issuer: IssuerData, messageId: string }>();
     public get credentialArrived() { return this.onCredentialArrived.expose(); }
 
@@ -54,18 +52,6 @@ export class VC {
     protected readonly onBeforeSigningVC = new LiteEvent<{ vc: VerifiableCredential, issuerDID: DID }>;
     public get beforeSigningVC() { return this.onBeforeSigningVC.expose(); };
 
-    protected readonly onBeforeSaveVC = new LiteEvent<{ vc: VerifiableCredential }>;
-    public get beforeSaveVC() { return this.onBeforeSaveVC.expose(); };
-
-    protected readonly onAfterSaveVC = new LiteEvent<{ vc: VerifiableCredential }>;
-    public get afterSaveVC() { return this.onAfterSaveVC.expose(); };
-
-    protected readonly onBeforeVerifyVC = new LiteEvent<{ vc: VerifiableCredential }>;
-    public get beforeVerifyVC() { return this.onBeforeVerifyVC.expose(); };
-
-    protected readonly onAfterVerifyVC = new LiteEvent<{ vc: VerifiableCredential, verifierDID: DID, result: boolean }>;
-    public get afterVerifyVC() { return this.onAfterVerifyVC.expose(); };
-
     protected credentialStatusPlugins = new Array<IStatusListAgentPlugin>();
 
     constructor(opts: {
@@ -75,9 +61,8 @@ export class VC {
         resolver: IAgentResolver,
         identity: AgentIdentity,
         agentStorage: IStorage,
-        vcStorage: IStorage,
+        vcStorage: IStorage
         messaging: Messaging,
-        verificationRules: ((vc: VerifiableCredential) => Promise<{ result: boolean, rejectDetail?: { name: string, description: string, code: number } }>)[],
     }) {
         this.transports = opts.transports;
         this.kms = opts.kms;
@@ -115,7 +100,6 @@ export class VC {
         })
 
         this.vcStorage = opts.vcStorage;
-        this.verificationRules = opts.verificationRules;
     }
 
     addCredentialStatusStrategy(credentialStatusStrategy: IStatusListAgentPlugin) {
@@ -123,18 +107,14 @@ export class VC {
     }
 
     async saveCredential(vc: VerifiableCredential) {
-        this.onBeforeSaveVC.trigger({ vc: vc });
         await this.vcStorage.add(vc.id, vc);
-        this.onAfterSaveVC.trigger({ vc: vc });
     }
 
     async saveCredentialWithInfo(vc: VerifiableCredential, params?: {
         styles: CredentialManifestStyles
         display: CredentialDisplay
     }) {
-        await this.onBeforeSaveVC.trigger({ vc: vc });
         await this.vcStorage.add(vc.id, { data: vc, styles: params.styles, display: params.display });
-        await this.onAfterSaveVC.trigger({ vc: vc });
     }
 
     async removeCredential(id: string) {
@@ -232,7 +212,7 @@ export class VC {
             throw Error("There aren't public keys valid to use based on Issuer DID Document and KMS secrets");
         }
 
-        await this.onBeforeSigningVC.trigger({ vc: opts.credential, issuerDID: opts.did });
+        this.onBeforeSigningVC.trigger({ vc: opts.credential, issuerDID: opts.did });
 
         for (let csPlugin of this.credentialStatusPlugins) {
             if (await csPlugin.canHandle({ vc: opts.credential, issuerDID: opts.did })) {
@@ -295,31 +275,11 @@ export class VC {
     async verifyVC(params: {
         vc: VerifiableCredential,
         purpose?: Purpose,
-    }): Promise<{
-        result: boolean;
-        error?: VCSuiteError;
-    }> {
+    }) {
         const vcService = new VCVerifierService({
             didDocumentResolver: (did: string) => this.resolver.resolve(DID.from(did)),
         });
         const result = await vcService.verify(params.vc, params.purpose || new AssertionMethodPurpose());
-
-        if (result.result) {
-            for (let f of this.verificationRules) {
-                const r = await f(params.vc)
-                if (!r.result) {
-                    return {
-                        result: false,
-                        error: {
-                            code: r.rejectDetail?.code,
-                            description: r.rejectDetail.description,
-                            name: r.rejectDetail.name
-                        }
-                    };
-                }
-            }
-        }
-
         return result;
     }
 

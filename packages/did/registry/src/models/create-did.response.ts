@@ -1,5 +1,5 @@
-import { IJWK } from "@extrimian/kms-core";
-import { ModenaDocumentModel } from "@extrimian/modena-sdk";
+import { IJWK } from "@quarkid/kms-core";
+import { ModenaDocumentModel } from "@quarkid/modena-sdk";
 
 export interface CreateDIDResponse {
     recoveryKeys: IJWK[];

@@ -1,6 +1,6 @@
-import { Service } from "@extrimian/did-core";
-import { IJWK } from "@extrimian/kms-core";
-import { DIDDocumentMetadata, ModenaRequest, ModenaSdkConfig } from "@extrimian/modena-sdk";
+import { Service } from "@quarkid/did-core";
+import { IJWK } from "@quarkid/kms-core";
+import { DIDDocumentMetadata, ModenaRequest, ModenaSdkConfig } from "@quarkid/modena-sdk";
 import fetch from "node-fetch";
 import { CreateDIDResponse } from "../models/create-did.response";
 import { VerificationMethod } from "../models/interfaces";

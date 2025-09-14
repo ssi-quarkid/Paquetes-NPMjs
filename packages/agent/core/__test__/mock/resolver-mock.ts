@@ -1,5 +1,5 @@
-import { DIDDocument } from "@extrimian/did-core";
-import { ModenaResponse } from "@extrimian/did-resolver";
+import { DIDDocument } from "@quarkid/did-core";
+import { ModenaResponse } from "@quarkid/did-resolver";
 import { DID, IAgentResolver } from "../../src";
 
 export class ResolverMock implements IAgentResolver {
