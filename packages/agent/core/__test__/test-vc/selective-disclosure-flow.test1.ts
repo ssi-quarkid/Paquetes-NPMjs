@@ -1,5 +1,5 @@
-import { Issuer } from '@extrimian/vc-core/dist/models/issuer';
-import { CredentialManifestStyles, InputDescriptor, WACIMessage } from '@extrimian/waci';
+import { Issuer } from '@quarkid/vc-core/dist/models/issuer';
+import { CredentialManifestStyles, InputDescriptor, WACIMessage } from '@quarkid/waci';
 import { AgentModenaUniversalRegistry, AgentModenaUniversalResolver, } from '../../src';
 import { Agent } from '../../src/agent';
 import { DWNTransport } from '../../src/models/transports/dwn-transport';

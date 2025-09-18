@@ -1,15 +1,15 @@
-import { AgentModenaUniversalRegistry, AgentModenaUniversalResolver } from '../../src';
+import { AgentModenaRegistry, AgentModenaResolver, AgentModenaUniversalRegistry, AgentModenaUniversalResolver, DWNTransport, WebsocketClientTransport } from '../../src';
 import { Agent } from '../../src/agent';
 import { WACIProtocol } from '../../src/vc/protocols/waci-protocol';
 import { TestConfig } from '../config';
 import { FileSystemAgentSecureStorage } from '../mock/filesystem-secure-storage';
 import { FileSystemStorage } from '../mock/filesystme-storage';
 import { MemoryStorage } from '../mock/memory-storage';
-import { TransportMock } from '../mock/transport-mock';
-import { credentialPresentation } from './credential-presentation';
-import { credentialIssuance } from './credential-issuance';
-import { credentialIssueForNotOperationalDID } from './issue-for-not-operational';
 import { getIssuerWACIProtocol } from '../helpers/waci-protocol-helper';
+import { MockTransport } from '../mock/transport-mock';
+import { credentialIssuance } from './credential-issuance';
+import { credentialPresentation } from './credential-presentation';
+import { credentialIssueForNotOperationalDID } from './issue-for-not-operational';
 
 jest.setTimeout(1000000);
 
@@ -39,14 +39,14 @@ beforeAll(async () => {
         }),
         vcStorage: new MemoryStorage(),
         vcProtocols: [getIssuerWACIProtocol()],
-        supportedTransports: [new TransportMock()],
+        supportedTransports: [new MockTransport()],
     });
     await issuerAgent.initialize();
 
+    const holderStorage = new FileSystemStorage({ filepath: "salus-waci-storage-test.json" });
     const holderWaciProtocol = new WACIProtocol({
-        storage: new MemoryStorage(),
+        storage: holderStorage,
         holder: {
-
             credentialApplication: async (inputs,
                 selectiveDisclosure,
                 message?,
@@ -73,10 +73,22 @@ beforeAll(async () => {
             filepath: './__test__/data-mock/agent-vc-storage.json',
         }),
         vcProtocols: [holderWaciProtocol],
-        supportedTransports: [new TransportMock()],
+        supportedTransports: [new MockTransport()],
     });
 
     await holderAgent.initialize();
+
+    // await holderAgent.identity.createNewDID({
+    //     dwnUrl: TestConfig.dwnUrl
+    // });
+
+    // const p = new Promise<void>((resolve, reject) => {
+    //     setTimeout(() => {
+    //         resolve();
+    //     }, 300000);
+    // });
+
+    // await p;
 });
 
 afterAll(() => {

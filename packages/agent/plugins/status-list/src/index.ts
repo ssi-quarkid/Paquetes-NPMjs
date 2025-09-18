@@ -1,0 +1,1 @@
+export { ExtrimianStatusListAgentPlugin } from "./plugin/extrimian-status-list.plugin"

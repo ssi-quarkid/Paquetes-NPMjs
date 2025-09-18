@@ -1,0 +1,1 @@
+export { OneClickPlugin } from "./plugin/oneclick-plugin"

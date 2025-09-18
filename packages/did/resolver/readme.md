@@ -2,7 +2,7 @@
 This package exposes the functionality to resolve DIDs using Modena Resolvers.
 
 ```
-import { DIDModenaResolver } from "@extrimian/did-resolver"
+import { DIDModenaResolver } from "@quarkid/did-resolver"
 
 const resolver = new DIDModenaResolver({ modenaURL: getModenaApiURL() });
 const didDocument = await resolver.resolveDID(did);

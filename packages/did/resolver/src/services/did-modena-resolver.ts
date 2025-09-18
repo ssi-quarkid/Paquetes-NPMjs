@@ -1,4 +1,4 @@
-import { DIDDocument } from "@extrimian/did-core";
+import { DIDDocument } from "@quarkid/did-core";
 import axios from "axios";
 import { ModenaResponse } from "../models/modena-response";
 

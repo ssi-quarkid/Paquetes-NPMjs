@@ -1,5 +1,5 @@
-// import { VerifiableCredential } from "@extrimian/vc-core";
-import { VerificationMethodTypes } from '@extrimian/did-core';
+// import { VerifiableCredential } from "@quarkid/vc-core";
+import { VerificationMethodTypes } from '@quarkid/did-core';
 import {
   AgentModenaUniversalRegistry,
   AgentModenaUniversalResolver,

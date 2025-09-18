@@ -2,7 +2,7 @@ import {
   AssertionMethodPurpose,
   AuthenticationPurpose,
   KeyAgreementPurpose,
-} from '@extrimian/did-core';
+} from '@quarkid/did-core';
 import { Base, BaseConverter, IJWK, IKeyPair, IKMS, Suite } from '@quarkid/kms-core';
 import {
   IdentityDataShareBehavior,
@@ -19,7 +19,7 @@ import {
 import { IAgentResolver } from './agent-resolver';
 import { IAgentStorage } from './agent-storage';
 import { DID } from './did';
-import { UpdateCommitmentUtils } from "@extrimian/modena-sdk";
+import { UpdateCommitmentUtils } from "@quarkid/modena-sdk";
 
 const AGENT_DID_KEY = 'agent-did';
 const OPERATIONAL_DID_KEY = 'operational-did';

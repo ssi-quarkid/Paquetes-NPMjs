@@ -1,9 +1,10 @@
-import { WACICredentialOfferSucceded, WACIProtocol } from "../../src";
+import { DID, VerifiableCredential, WACICredentialOfferSucceded, WACIProtocol } from "../../src";
+import { IStorage } from "../../src/models/agent-storage";
 import { MemoryStorage } from "../mock/memory-storage";
 
-export function getIssuerWACIProtocol() {
+export function getIssuerWACIProtocol(storage?: IStorage) {
     return new WACIProtocol({
-        storage: new MemoryStorage(),
+        storage: storage || new MemoryStorage(),
         issuer: {
             issuerVerificationRules: async (waciInvitationId: string, holdedDid: string) => {
                 console.log("issuerVerificationRules", waciInvitationId);
@@ -24,8 +25,7 @@ export function getIssuerWACIProtocol() {
                                 ],
                                 id: 'http://example.edu/credentials/58473',
                                 type: ['VerifiableCredential', 'AlumniCredential'],
-                                issuer:
-                                    'did:quarkid:matic:EiDs1liYifwFEg9l7rxrpR48MH-7Z-M2E32R1vEYThQWsQ',
+                                issuer: 'did:quarkid:matic:EiDs1liYifwFEg9l7rxrpR48MH-7Z-M2E32R1vEYThQWsQ',
                                 issuanceDate: new Date(),
                                 credentialSubject: {
                                     id: 'did:quarkid:matic:EiCG4tEWdX08DuGKM6rX-fUfHxmJ_N6SY8XqTI8QHfBgtQ',
@@ -38,16 +38,21 @@ export function getIssuerWACIProtocol() {
                                 schema: 'https://schema.org/EducationalOccupationalCredential',
                                 display: {
                                     title: {
-                                        path: ['$.name', '$.vc.name'],
+                                        path: ['$.credentialSubject.givenName'],
                                         fallback: 'Alumni Credential',
                                     },
                                     subtitle: {
-                                        path: ['$.class', '$.vc.class'],
+                                        path: ['$.credentialSubject.familyName'],
                                         fallback: 'Alumni',
                                     },
                                     description: {
                                         text: 'Credencial que permite validar que es alumno del establecimiento',
                                     },
+                                    properties: [{
+                                        path: ['$.credentialSubject.givenName'],
+                                        fallback: 'Sin nombre',
+                                        label: 'Nombre'
+                                    }]
                                 },
                                 styles: {
                                     background: {
@@ -95,6 +100,9 @@ export function getIssuerWACIProtocol() {
             },
         },
         verifier: {
+            businessVerificationRules: async (invitationId: string, holderDID: DID, vcs: VerifiableCredential[]) => {
+                return { result: false, rejectMessage: 'Se rechaza por prueba' } as any;
+            },
             presentationDefinition: async (invitationId: string) => {
                 return {
                     frame: {

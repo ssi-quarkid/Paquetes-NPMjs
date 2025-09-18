@@ -36,7 +36,7 @@ interface KMSStorage {
 This is a mock implementation example
 
 ```
-import { KMSStorage } from "@extrimian/kms-core";
+import { KMSStorage } from "@quarkid/kms-core";
 
 export class SecureStorage implements KMSStorage {
     map = new Map<string, any>();

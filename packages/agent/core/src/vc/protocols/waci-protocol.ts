@@ -1,10 +1,10 @@
-import { Issuer, UnsignedCredential, VerifiableCredential } from "@extrimian/vc-core";
+import { Issuer, UnsignedCredential, VerifiableCredential } from "@quarkid/vc-core";
 import {
     Actor, ClaimFormat, CredentialFulfillment, CredentialManifest, CredentialManifestStyles,
     DisplayMappingObject, GoalCode, InputDescriptor, OutputDescriptor, PresentationDefinition,
     PresentationDefinitionFrame, WACIInterpreter, WACIMessage, WACIMessageType, validateVcByInputDescriptor,
     OfferCredentialMessageParams
-} from "@extrimian/waci";
+} from "@quarkid/waci";
 import { decode } from "base-64";
 import * as jsonpath from 'jsonpath';
 import * as jsonschema from 'jsonschema';
@@ -15,7 +15,7 @@ import { getSearchParam } from "../../utils";
 import { CredentialFlow } from "../models/credentia-flow";
 import { ActorRole, VCProtocol, VCProtocolResponse } from "./vc-protocol";
 
-export class WACIProtocol extends VCProtocol<WACIMessage>{
+export class WACIProtocol extends VCProtocol<WACIMessage> {
     private waciInterpreter: WACIInterpreter;
     private storage: IStorage;
 
@@ -24,6 +24,7 @@ export class WACIProtocol extends VCProtocol<WACIMessage>{
     selectVcToPresent?: (vcs: VerifiableCredential[]) => Promise<VerifiableCredential[]>;
     presentationDefinition?: (invitationId: string) => Promise<{ inputDescriptors: InputDescriptor[], frame?: PresentationDefinitionFrame }>;
     credentialApplication?: (inputs: { descriptor: InputDescriptor, credentials: VerifiableCredentialWithInfo[] }[], selectiveDisclosure?: SelectiveDisclosure, message?: WACIMessage, issuer?: (Issuer | CredentialManifestStyles), credentialsToReceive?: VerifiableCredentialWithInfo[]) => Promise<VerifiableCredential[]>;
+    businessVerificationRules?: (invitationId: string, holderDID: DID, vcs: VerifiableCredential[]) => Promise<BusinessRulesVerificationResult>;
 
     constructor(params?: {
         issuer?: {
@@ -47,7 +48,7 @@ export class WACIProtocol extends VCProtocol<WACIMessage>{
         },
         verifier?: {
             presentationDefinition?: (invitationId: string) => Promise<{ inputDescriptors: InputDescriptor[], frame?: PresentationDefinitionFrame }>,
-
+            businessVerificationRules?: (invitationId: string, holderDID: DID, vcs: VerifiableCredential[]) => Promise<BusinessRulesVerificationResult>,
         }
         storage: IStorage,
     }) {
@@ -57,6 +58,7 @@ export class WACIProtocol extends VCProtocol<WACIMessage>{
         this.selectVcToPresent = params?.holder?.selectVcToPresent;
         this.presentationDefinition = params?.verifier?.presentationDefinition;
         this.credentialApplication = params?.holder?.credentialApplication;
+        this.businessVerificationRules = params.verifier?.businessVerificationRules;
         this.storage = params?.storage;
     }
 
@@ -137,7 +139,6 @@ export class WACIProtocol extends VCProtocol<WACIMessage>{
                 }),
                 handleIssuanceAck: async (p: { status: any, from: string, pthid: string, thid: string, message: WACIMessage }) => {
                     const data = await this.storage.get(p.thid);
-                    const m = data[0];
                     const invitationId = data[0].pthid;
 
                     this.onAckCompleted.trigger({
@@ -146,7 +147,7 @@ export class WACIProtocol extends VCProtocol<WACIMessage>{
                         messageId: p.message.id,
                         role: ActorRole.Issuer,
                         thid: p.thid,
-                    })
+                    });
                 },
                 verifyPresentation: async (vc) => await this.agent.vc.verifyPresentation({
                     challenge: vc.challenge,
@@ -348,13 +349,22 @@ export class WACIProtocol extends VCProtocol<WACIMessage>{
 
                     return true;
                 },
-                handlePresentationAck: async (p: { status: any, message: WACIMessage }) =>
-                    this.onAckCompleted.trigger({
-                        status: p.status,
-                        role: ActorRole.Holder,
-                        messageId: p.message.id,
-                        thid: p.message.thid,
-                    }),
+                handlePresentationAck: async (p: { status: any, message: WACIMessage }) => {
+                    if (p.message.type !== "https://didcomm.org/report-problem/2.0/problem-report") {
+                        const data = await this.storage.get(p.message.thid);
+                        // const ot = await this.storage.get(data[0].thid);
+                        // const ot2 = await this.storage.get(data[0].id);
+                        const invitationId = data[0].pthid;
+
+                        this.onAckCompleted.trigger({
+                            status: p.status,
+                            role: ActorRole.Holder,
+                            messageId: p.message.id,
+                            thid: p.message.thid,
+                            invitationId,
+                        });
+                    }
+                },
                 signPresentation: async (p: { contentToSign: string, challenge: string, domain: string, message: WACIMessage }) => {
                     const signature = await this.agent.vc.signPresentation({
                         contentToSign: p.contentToSign,
@@ -402,20 +412,36 @@ export class WACIProtocol extends VCProtocol<WACIMessage>{
                     return result;
                 },
                 verifyPresentation: async (p) => {
-                    const result = await this.agent.vc.verifyPresentation({
-                        presentation: p.presentation,
-                        challenge: p.challenge
-                    });
-
-                    if (!result) {
-                        this.onVcVerified.trigger({
-                            verified: false,
-                            presentationVerified: false,
-                            vc: p.presentation,
-                        })
+                    return {
+                        result: true
                     }
 
-                    return result;
+                    // const data = await this.storage.get(p.message.thid);
+
+                    // const invitationId = data[0].pthid;
+
+                    // let result = await this.agent.vc.verifyPresentation({
+                    //     presentation: p.presentation,
+                    //     challenge: p.challenge,
+                    // });
+
+                    // if (result.result && this.businessVerificationRules) {
+                    //     let bvrResult = await this.businessVerificationRules(invitationId, DID.from(p.holderDid), p.presentation);
+
+                    //     if (bvrResult.result == false) {
+                    //         result = { result: false, error: { name: "businessVerificationRules", description: bvrResult.rejectMessage, code: null } }
+                    //     }
+                    // }
+
+                    // if (!result.result) {
+                    //     this.onVcVerified.trigger({
+                    //         verified: false,
+                    //         presentationVerified: false,
+                    //         vc: p.presentation,
+                    //     });
+                    // }
+
+                    // return result;
                 },
             }, Actor.Verifier);
         }
@@ -438,7 +464,7 @@ export class WACIProtocol extends VCProtocol<WACIMessage>{
 
         const response = await this.waciInterpreter.processMessage(messages);
 
-        if (response && response.message.type == "https://didcomm.org/present-proof/3.0/propose-presentation") {
+        if (response) {
             this.storage.add(response.message.id, [response.message])
         }
 
@@ -463,11 +489,17 @@ export class WACIProtocol extends VCProtocol<WACIMessage>{
         if (messages[messages.length - 1].type == WACIMessageType.ProblemReport) {
             const problemReportMessage = messages[messages.length - 1];
 
+            const data = await this.storage.get(problemReportMessage.thid);
+            const ot = await this.storage.get(data[0].thid);
+            const invitationId = ot ? ot[0].pthid : data.pthid;
+
+
             this.onProblemReport.trigger({
                 did: DID.from(problemReportMessage.from),
                 code: problemReportMessage.body?.code,
+                codeMessage: problemReportMessage.body?.comment,
                 messageId: waciMessage.id,
-                invitationId: problemReportMessage.thid,
+                invitationId: invitationId,
             });
         }
 
@@ -622,6 +654,8 @@ export type IssuerVerificationRuleResult = {
     verified: boolean;
     rejectMsg: string;
 }
+
+export type BusinessRulesVerificationResult = { result: true } | { result: false, rejectMessage: string };
 
 export type WACICredentialOfferResponse = WACICredentialOfferWaitForResponse | WACICredentialOfferRejected | WACICredentialOfferSucceded;
 

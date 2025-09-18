@@ -1,5 +1,5 @@
-import { DIDCommMessage, Purpose } from "@extrimian/did-core";
-import { VerifiableCredential } from "@extrimian/vc-core";
+import { DIDCommMessage, Purpose } from "@quarkid/did-core";
+import { VerifiableCredential } from "@quarkid/vc-core";
 import { IJWK } from "../utils/base-converter";
 import { IKeyPair } from "./keypair";
 import { DIDCommMessagePacking, IDIDCommMessage, IPackedDIDCommMessage } from "./suites/didcomm/didcomm-message-media-type";

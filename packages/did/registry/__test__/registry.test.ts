@@ -1,16 +1,16 @@
-import { IJWK, LANG, Suite } from "@extrimian/kms-core";
-import { KMSClient } from "@extrimian/kms-client";
+import { IJWK, LANG, Suite } from "@quarkid/kms-core";
+import { KMSClient } from "@quarkid/kms-client";
 import fetch from "node-fetch";
 import {
   ModenaDocumentModel,
   ModenaPublicKeyPurpose,
   ModenaRequest,
-} from "@extrimian/modena-sdk";
+} from "@quarkid/modena-sdk";
 import { Did } from "../src/index";
-import { AssertionMethodPurpose, DIDDocument } from "@extrimian/did-core";
+import { AssertionMethodPurpose, DIDDocument } from "@quarkid/did-core";
 import { DIDModenaResolver } from "../../resolver/src/index";
 import { ModenaUniversalRegistry } from "../src/services/modena-universal-registry.service";
-import { AuthenticationPurpose } from "@extrimian/did-core";
+import { AuthenticationPurpose } from "@quarkid/did-core";
 
 jest.setTimeout(5000000);
 

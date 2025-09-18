@@ -3,10 +3,10 @@ import { DID } from "../models/did";
 import { DWNTransport } from "../models/transports/dwn-transport";
 import { ITransport, MessageArrivedEventArg } from "../models/transports/transport";
 import { LiteEvent } from "../utils/lite-event";
-import * as NodeCache from 'node-cache';
+const LRU = require('lru-cache');
 
 export class AgentTransport {
-    private cacheStorage: NodeCache;
+    private cacheStorage;
 
     private readonly onMessageArrived = new LiteEvent<{ message: any, transport: ITransport, contextMessage: any }>();
     public get messageArrived() { return this.onMessageArrived.expose(); }
@@ -24,7 +24,7 @@ export class AgentTransport {
         agent: Agent,
         transports?: ITransport[],
     }) {
-        this.cacheStorage = new NodeCache({ stdTTL: 100, checkperiod: 120 });
+        this.cacheStorage = new LRU({ ttl: 1000 *  30, checkperiod: 120 });
 
         this.agent = params.agent;
         if (!params.transports) {

@@ -1,4 +1,4 @@
-import { DIDCommMessage } from "@extrimian/did-core";
+import { DIDCommMessage } from "@quarkid/did-core";
 
 export class WACIMessage extends DIDCommMessage {
 }
