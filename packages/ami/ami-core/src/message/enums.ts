@@ -1,7 +1,7 @@
 export enum MessageTypes {
-    STANDARD_MESSAGE = 'extrimian/messaging/standard',
-    PROBLEM_REPORT = 'extrimian/messaging/problem-report',
-    ACK = 'extrimian/messaging/ack',
+    STANDARD_MESSAGE = 'quarkid/messaging/standard',
+    PROBLEM_REPORT = 'quarkid/messaging/problem-report',
+    ACK = 'quarkid/messaging/ack',
   }
   
   export enum ContentType {

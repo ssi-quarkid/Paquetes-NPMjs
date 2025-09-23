@@ -1,6 +1,6 @@
-# Extrimian Agent
+# QuarkID Agent
 
-El agente de extrimian resuelve problemas básicos de identidad autosoberana.
+El agente de QuarkID resuelve problemas básicos de identidad autosoberana.
 
 Permite crear DIDs, configurar servicios como el DWN, configurar protocolos para la transferencia de credenciales (WACI) y automatizar flujos. A través de eventos, permite identificar el momento en que se recibe una credencial y el momento en que se presenta (informando además el resultado de la presentación).
 
@@ -311,8 +311,8 @@ Una vez configurado el WACIProtocol que define el comportamiento del agente resp
 ```
 //Crear una nueva instancia del agente, se deben pasar los protocolos a usar para la generación de VC (por ejemplo el WACIProtocol que definimos anteriormente)
 agent = new Agent({
-    didDocumentRegistry: new AgentModenaUniversalRegistry("http://modena.gcba-extrimian.com:8080"),
-    didDocumentResolver: new AgentModenaUniversalResolver("http://modena.gcba-extrimian.com:8080"),
+    didDocumentRegistry: new AgentModenaUniversalRegistry("http://modena.gcba-quarkid.com:8080"),
+    didDocumentResolver: new AgentModenaUniversalResolver("http://modena.gcba-quarkid.com:8080"),
     vcProtocols: [waciProtocol],
 });
 ```
@@ -353,7 +353,7 @@ const invitationMessage = await issuerAgent.vc.createInvitationMessage({ flow: C
 
 Este mensaje puede ser convertido en un código QR y procesado posteriormente por el Agent del holder que iniciará el flujo de WACI para el intercambio de credenciales.
 
-Para procesar este primer mensaje de invitación con el agente de extrimian, el holder puede llamar al método processMessage, que iniciará el flujo que se continuará de forma automática.
+Para procesar este primer mensaje de invitación con el agente de QuarkID, el holder puede llamar al método processMessage, que iniciará el flujo que se continuará de forma automática.
 
 ### 3. (HOLDER) Procesar mensaje de invitación para la generación de credenciales.
 

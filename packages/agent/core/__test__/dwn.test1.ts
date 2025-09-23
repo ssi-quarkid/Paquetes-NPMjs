@@ -83,7 +83,7 @@ describe('Verifiable Credentials', () => {
             })
 
             await holderAgent.processMessage({
-                message: "extrimian://?_oob=eyJ0eXBlIjoiaHR0cHM6Ly9kaWRjb21tLm9yZy9vdXQtb2YtYmFuZC8yLjAvaW52aXRhdGlvbiIsImlkIjoiNmM4MThlYjMtYjcyOS00MmVhLTk5YmMtZmJmZTk2ZWE0MzdjIiwiZnJvbSI6ImRpZDpxdWFya2lkOnprc3luYzpFaURPR3RPVW9Zb3JrZjIwZzFITnc3Yl9LMHVtMzJPSi1WeEtacS1OdGI5cWZBIiwiYm9keSI6eyJnb2FsX2NvZGUiOiJzdHJlYW1saW5lZC12YyIsImFjY2VwdCI6WyJkaWRjb21tL3YyIl19fQ=="
+                message: "quarkid://?_oob=eyJ0eXBlIjoiaHR0cHM6Ly9kaWRjb21tLm9yZy9vdXQtb2YtYmFuZC8yLjAvaW52aXRhdGlvbiIsImlkIjoiNmM4MThlYjMtYjcyOS00MmVhLTk5YmMtZmJmZTk2ZWE0MzdjIiwiZnJvbSI6ImRpZDpxdWFya2lkOnprc3luYzpFaURPR3RPVW9Zb3JrZjIwZzFITnc3Yl9LMHVtMzJPSi1WeEtacS1OdGI5cWZBIiwiYm9keSI6eyJnb2FsX2NvZGUiOiJzdHJlYW1saW5lZC12YyIsImFjY2VwdCI6WyJkaWRjb21tL3YyIl19fQ=="
             });
         });
 

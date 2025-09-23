@@ -103,7 +103,7 @@ La publicación debería realizarse mediante **GitHub Actions** que:
 ### @quarkid/status-list-agent-plugin
 
 - Versión: 0.1.1
-- Descripción: Extrimian Status List Agent Plugin
+- Descripción: QuarkID Status List Agent Plugin
 - Scripts: build, test
 - Dependencias internas: Ninguna
 - Dependencias externas: axios@^1.7.2

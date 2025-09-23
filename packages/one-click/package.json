@@ -11,7 +11,7 @@
   "private": false,
   "typings": "dist/index.d.ts",
   "keywords": [],
-  "author": "Extrimian",
+  "author": "QuarkID",
   "license": "Apache2.0",
   "devDependencies": {
     "@quarkid/agent": "^0.8.5",
