@@ -1,6 +1,6 @@
 {
   "name": "@quarkid/kms-suite-rsa-signature-2018",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -20,9 +20,9 @@
     "typescript": "^4.5.4"
   },
   "dependencies": {
-    "@quarkid/did-core":  "1.1.0",
-    "@quarkid/kms-core": "^1.1.0",
-    "@quarkid/kms-suite-jsonld": "^1.1.0",
+    "@quarkid/did-core": "1.1.1",
+    "@quarkid/kms-core": "^1.4.0-3",
+    "@quarkid/kms-suite-jsonld": "^1.1.2",
     "@types/jwk-to-pem": "^2.0.1",
     "crypto-ld": "3.8.0",
     "js-crypto-rsa": "^1.0.4",

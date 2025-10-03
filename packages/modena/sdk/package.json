@@ -1,14 +1,14 @@
 {
   "name": "@quarkid/modena-sdk",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "private": false,
   "description": "TypeScript SDK for Modena",
   "license": "Apache-2.0",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "dependencies": {
-    "@quarkid/kms-client": "1.4.0-0",
-    "@quarkid/kms-core": "1.4.0-0",
+    "@quarkid/kms-client": "1.4.0-3",
+    "@quarkid/kms-core": "1.4.0-3",
     "@transmute/did-key-secp256k1": "^0.2.1-unstable.35",
     "@waiting/base64": "4.2.9",
     "canonicalize": "1.0.1",

@@ -1,6 +1,6 @@
 {
   "name": "@quarkid/ami-agent-plugin",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Ami Agent Plugin",
   "main": "dist/index.js",
   "private": false,
@@ -22,11 +22,11 @@
     "typescript": "^4.5.4"
   },
   "peerDependencies": {
-    "@quarkid/agent": "x.x.x",
-    "@quarkid/one-click-agent-plugin": "x.x.x"
+    "@quarkid/agent": "0.10.0-6",
+    "@quarkid/one-click-agent-plugin": "0.3.1"
   },
   "dependencies": {
-    "@quarkid/ami-core": "0.1.0",
+    "@quarkid/ami-core": "0.1.1",
     "@quarkid/ami-sdk": "0.1.2"
   }
 }

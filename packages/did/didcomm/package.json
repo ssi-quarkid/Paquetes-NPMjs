@@ -1,30 +1,30 @@
 {
-	"author": "QuarkID",
-	"license": "Apache-2.0",
-	"name": "@quarkid/did-comm",
-	"version": "1.1.0",
-	"main": "dist/index.js",
-	"typings": "dist/index.d.ts",
-	"files": [
-		"dist",
-		"src"
-	],
-	"scripts": {
-		"build": "tsc"
-	},
-	"devDependencies": {
-		"@types/node": "^17.0.27",
-		"inversify": "^6.0.1",
-		"nodemon": "^2.0.15",
-		"reflect-metadata": "^0.1.13",
-		"ts-node": "^10.4.0",
-		"typescript": "^4.5.4"
-	},
-	"dependencies": {
-		"@quarkid/core": "1.0.5",
-		"@quarkid/did-core": "1.1.0",
-		"@quarkid/did-resolver": "1.1.0",
-		"@quarkid/kms-client": "1.1.0",
-		"@quarkid/kms-core": "1.1.0"
-	}
+  "author": "QuarkID",
+  "license": "Apache-2.0",
+  "name": "@quarkid/did-comm",
+  "version": "1.1.1",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.27",
+    "inversify": "^6.0.1",
+    "nodemon": "^2.0.15",
+    "reflect-metadata": "^0.1.13",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.4"
+  },
+  "dependencies": {
+    "@quarkid/core": "1.0.6",
+    "@quarkid/did-core": "1.1.1",
+    "@quarkid/did-resolver": "1.4.5",
+    "@quarkid/kms-client": "1.4.0-3",
+    "@quarkid/kms-core": "1.4.0-3"
+  }
 }

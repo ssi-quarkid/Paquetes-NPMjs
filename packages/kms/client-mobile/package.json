@@ -1,6 +1,6 @@
 {
   "name": "@quarkid/kms-client-mobile",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "dist/src/index.js",
   "typings": "dist/src/index.d.ts",
@@ -21,11 +21,11 @@
     "typescript": "^4.5.4"
   },
   "dependencies": {
-    "@quarkid/kms-core": "^1.1.0",
-    "@quarkid/kms-suite-bbsbls2020": "^1.1.0",
-    "@quarkid/kms-suite-didcomm": "^1.1.0",
-    "@quarkid/kms-suite-es256k": "^1.1.0",
-    "@quarkid/vc-core": "1.0.7",
+    "@quarkid/kms-core": "^1.4.0-3",
+    "@quarkid/kms-suite-bbsbls2020": "^1.2.0-1",
+    "@quarkid/kms-suite-didcomm": "^1.1.1",
+    "@quarkid/kms-suite-es256k": "^1.2.3",
+    "@quarkid/vc-core": "1.1.0-1",
     "ts-jest": "^28.0.1"
   }
 }

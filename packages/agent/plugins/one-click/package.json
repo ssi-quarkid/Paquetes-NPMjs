@@ -1,6 +1,6 @@
 {
   "name": "@quarkid/one-click-agent-plugin",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "One Click Agent Plugin",
   "main": "dist/index.js",
   "private": false,
@@ -22,9 +22,9 @@
     "typescript": "^4.5.4"
   },
   "peerDependencies": {
-    "@quarkid/agent": "x.x.x"
+    "@quarkid/agent": "0.10.0-6"
   },
   "dependencies": {
-    "@quarkid/oneclick-sdk": "0.3.0"
+    "@quarkid/oneclick-sdk": "0.3.2"
   }
 }

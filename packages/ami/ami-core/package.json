@@ -1,6 +1,6 @@
 {
   "name": "@quarkid/ami-core",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
@@ -23,6 +23,6 @@
     "typescript": "^4.5.4"
   },
   "dependencies": {
-    "@quarkid/did-core": "1.1.0"
+    "@quarkid/did-core": "1.1.1"
   }
 }

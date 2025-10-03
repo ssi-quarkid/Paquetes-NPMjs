@@ -1,6 +1,6 @@
 {
   "name": "@quarkid/status-list-agent-plugin",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "QuarkID Status List Agent Plugin",
   "main": "dist/index.js",
   "private": false,
@@ -22,7 +22,7 @@
     "typescript": "^4.5.4"
   },
   "peerDependencies": {
-    "@quarkid/agent": "x.x.x"
+    "@quarkid/agent": "0.10.0-6"
   },
   "dependencies": {
     "axios": "^1.7.2"
